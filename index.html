@@ -26,10 +26,10 @@
       <p>Distrito GDL La Primavera · cuadrícula fija 300 × 300 m · V1.17</p>
     </div>
     <div class="filebox">
-      <label class="btn primary" for="excelFile">Cargar / actualizar soportes</label>
-      <input id="excelFile" type="file" accept=".xls,.xlsx,.xlsm" hidden />
-      <label class="btn network-btn" for="networkFile">Cargar / actualizar base de red</label>
-      <input id="networkFile" type="file" accept=".xls,.xlsx,.xlsm" hidden />
+      <label id="supportUploadLabel" class="btn primary upload-locked" for="excelFile" aria-disabled="true">Base de soporte</label>
+      <input id="excelFile" type="file" disabled accept=".xls,.xlsx,.xlsm" hidden />
+      <label id="networkUploadLabel" class="btn network-btn upload-locked" for="networkFile" aria-disabled="true">Base de clientes</label>
+      <input id="networkFile" type="file" disabled accept=".xls,.xlsx,.xlsm" hidden />
       <button id="openMasivos" class="btn" type="button" style="background:#ff7300;color:#fff;border-color:#ff7300;font-weight:800">⚠ Planta Externa ↗</button>
       <button id="openRepeat60" class="btn" type="button" style="background:#c64c78;color:#fff;border-color:#c64c78;font-weight:800">🌸 Repeat 60 ↗</button>
       <button id="clearDb" class="btn danger" type="button">Borrar histórico</button>
@@ -191,8 +191,29 @@
       <div class="import-modal-actions"><button id="importModalAccept" type="button" hidden>Aceptar</button></div>
     </div>
   </div>
-  <script src="app.js"></script>\n  <script src="bienvenida.js"></script>
   <script>document.getElementById("openRepeat60").addEventListener("click",()=>{const w=window.open("repeat60.html","_blank");if(!w)alert("Permite las ventanas emergentes para abrir Repeat 60.")});</script>
 <script>document.getElementById("openMasivos").addEventListener("click",()=>{const w=window.open("masivos.html","_blank");if(!w)alert("Permite ventanas emergentes para abrir Cortes Masivos.")});</script>
+
+  <!-- V1.40: borrado selectivo independiente de Soportes y Reincidencias -->
+  <div id="deleteModal" class="history-delete-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="deleteTitle" data-stage="select">
+    <section class="history-delete-card">
+      <h2 id="deleteTitle">Administrar histórico local</h2>
+      <p id="deleteSummary"></p>
+      <div id="deleteChoice" class="history-delete-choices">
+        <label><input type="checkbox" id="deleteSupports"> Borrar histórico de soportes (eventos, OS e importaciones)</label>
+        <label><input type="checkbox" id="deleteNetwork"> Borrar base de red (clientes e inventario)</label>
+      </div>
+      <div id="deleteFinal" hidden>
+        <p id="deleteFinalSummary"></p>
+        <p class="history-delete-warning">Esta acción no se puede deshacer. Para recuperar la información deberás importar nuevamente los Excel originales.</p>
+        <label><input type="checkbox" id="deleteConfirm"> Confirmo que deseo eliminar definitivamente los datos seleccionados.</label>
+      </div>
+      <p id="deleteError" class="history-delete-warning" role="alert"></p>
+      <div class="history-delete-actions"><button id="deleteCancel" type="button">Cancelar</button><button id="deleteExecute" type="button" disabled>Continuar</button></div>
+    </section>
+  </div>
+  <!-- V-43: cargar la lógica después de crear todos los elementos del modal de borrado. -->
+  <script src="app.js"></script>
+  <script src="bienvenida.js"></script>
 </body>
 </html>

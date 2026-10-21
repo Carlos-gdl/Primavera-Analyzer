@@ -7,6 +7,23 @@ let initialMapFitDone=false; // V1.13.1: conservar zoom del usuario
 let pointsEnabled=false, pointsMode='both', pointsScope='visible', pointLayers=null;
 let db, allEvents=[], imports=[], networkIndex=new Map(), networkMeta=null, selectedYears=new Set(), selectedWeekNums=new Set(), selectedClusters=new Set(), viewMode='supports', layers=[], selectedCell=null, quadrantVisibility='all', manualVisibleIds=new Set();
 const $=id=>document.getElementById(id);
+// V-42: initialization readiness is independent of whether the database contains records.
+let storageReady=false;
+let resolveStorageReady,rejectStorageReady;
+const storageReadyPromise=new Promise((resolve,reject)=>{resolveStorageReady=resolve;rejectStorageReady=reject});
+// Avoid an unhandled rejection if the browser denies IndexedDB access.
+storageReadyPromise.catch(()=>{});
+function setStorageReady(ready){
+ storageReady=ready;
+ for(const [input,label] of [['excelFile','supportUploadLabel'],['networkFile','networkUploadLabel']]){
+  $(input).disabled=!ready;$(label).classList.toggle('upload-locked',!ready);$(label).setAttribute('aria-disabled',String(!ready));
+ }
+}
+async function requireStorage(){
+ await storageReadyPromise;
+ if(!storageReady||!db)throw new Error('El almacenamiento local todavía no está disponible. Actualiza la página e inténtalo de nuevo.');
+}
+
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const norm=s=>String(s??'').trim();
 function status(msg,type='info'){const e=$('status');e.textContent=msg;e.className='status '+type}
@@ -59,7 +76,24 @@ $('importModalAccept').onclick=()=>{$('importModal').hidden=true;importDialog.op
 async function ingest(file){status('Validando y procesando el Excel…','info');const buf=await file.arrayBuffer();importProgress('Cargando soportes',file.name,15,'Archivo leído; interpretando Excel…');await importYield();let wb;try{wb=XLSX.read(buf,{type:'array',cellDates:true})}catch(e){throw new Error('No fue posible leer el archivo como Excel.')}
  const ws=wb.Sheets[wb.SheetNames[0]];const matrix=XLSX.utils.sheet_to_json(ws,{header:1,defval:'',raw:true});let hi=-1;for(let i=0;i<Math.min(matrix.length,15);i++){const set=new Set(matrix[i].map(norm));if(REQUIRED.filter(h=>set.has(h)).length>=10){hi=i;break}}if(hi<0)throw new Error('No se encontró la fila de encabezados esperada.');const headers=matrix[hi].map(norm);const missing=REQUIRED.filter(h=>!headers.includes(h));if(missing.length)throw new Error('Estructura diferente. Faltan columnas: '+missing.join(', '));
  importProgress('Cargando soportes',file.name,35,'Encabezados validados; procesando registros…');await importYield();const rows=[];let invalid=0;for(let i=hi+1;i<matrix.length;i++){const a=matrix[i];if(!a||a.every(v=>norm(v)===''))continue;const r={};headers.forEach((h,j)=>{if(h)r[h]=a[j]});if(norm(r.Tipo).toLowerCase()!=='soporte')continue;const lat=Number(String(r.Latitud).replace(',','.')),lon=Number(String(r.Longitud).replace(',','.'));const d=excelDate(r['Fecha creacion FFM']);if(!validLL(lat,lon)||!d){invalid++;continue}const c=cellFor(lat,lon);rows.push({key:eventKey(r,i),cuenta:norm(r.Cuenta),nombre:norm(r['Nombre cliente']),ticket:norm(r.Ticket),os:norm(r.OS),ot:norm(r.OT),subtipo:norm(r.Subtipo),distrito:norm(r.Distrito),cluster:norm(r.Cluster)||'SIN CLUSTER',lat,lon,date:d.toISOString(),week:isoWeek(d),estatus:norm(r.Estatus)||'SIN ESTATUS',estado:norm(r.Estado),motivo:norm(r.Motivo),raw:r,cell:c.id,ix:c.ix,iy:c.iy});if(i%1200===0){importProgress('Cargando soportes',file.name,35+Math.floor(40*(i-hi)/Math.max(1,matrix.length-hi)),'Procesando '+(i-hi).toLocaleString('es-MX')+' registros…');await importYield()}}
- if(!rows.length)throw new Error('El archivo no contiene registros de Soporte con fecha y coordenadas válidas.');importProgress('Cargando soportes',file.name,80,'Guardando registros en el navegador…');await importYield();await putMany(STORE,rows);const dates=rows.map(x=>new Date(x.date)).sort((a,b)=>a-b);const imp={id:Date.now()+':'+file.name,name:file.name,loadedAt:new Date().toISOString(),rows:rows.length,invalid,from:dates[0].toISOString(),to:dates[dates.length-1].toISOString()};await putMany(IMPORTS,[imp]);await reload();importComplete('Soportes cargados correctamente',file.name,`${rows.length.toLocaleString('es-MX')} soportes válidos · ${invalid.toLocaleString('es-MX')} omitidos`);status(`Archivo procesado: ${rows.length.toLocaleString('es-MX')} soportes válidos; ${invalid.toLocaleString('es-MX')} filas sin fecha/coordenadas válidas fueron omitidas. Los eventos repetidos se actualizaron, no se duplicaron.`,'ok')}
+ if(!rows.length)throw new Error('El archivo no contiene registros de Soporte con fecha y coordenadas válidas.');importProgress('Cargando soportes',file.name,80,'Guardando registros en el navegador…');await importYield();const existing=await txGetAll(STORE),byOs=new Map(),byKey=new Map(existing.map(e=>[e.key,e]));
+ for(const e of existing)if(e.os&&!byOs.has(e.os))byOs.set(e.os,e);
+ const pending=new Map();let added=0,updated=0,unchanged=0,duplicatesInFile=0;
+ for(const incoming of rows){
+  const prior=(incoming.os&&byOs.get(incoming.os))||byKey.get(incoming.key)||pending.get(incoming.key);
+  if(prior){
+   // No overwrite of valid existing values: fill missing fields only, preserving original event key.
+   const merged={...prior};let changed=false;
+   for(const [field,value] of Object.entries(incoming)){
+    if(field==='key')continue;
+    if((merged[field]===undefined||merged[field]===null||merged[field]==='')&&value!==undefined&&value!==null&&value!==''){merged[field]=value;changed=true}
+   }
+   if(changed){pending.set(prior.key,merged);updated++}else unchanged++;
+   if(pending.has(prior.key))duplicatesInFile++;
+   byKey.set(prior.key,merged);if(merged.os)byOs.set(merged.os,merged);
+  }else{pending.set(incoming.key,incoming);byKey.set(incoming.key,incoming);if(incoming.os)byOs.set(incoming.os,incoming);added++}
+ }
+ if(pending.size)await putMany(STORE,[...pending.values()]);const dates=rows.map(x=>new Date(x.date)).sort((a,b)=>a-b);const imp={id:Date.now()+':'+file.name,name:file.name,loadedAt:new Date().toISOString(),rows:rows.length,added,updated,unchanged,invalid,from:dates[0].toISOString(),to:dates[dates.length-1].toISOString()};if(added||updated||!imports.some(x=>x.name===file.name))await putMany(IMPORTS,[imp]);await reload();importComplete('Soportes cargados correctamente',file.name,`${added.toLocaleString('es-MX')} nuevos · ${updated.toLocaleString('es-MX')} completados · ${unchanged.toLocaleString('es-MX')} existentes sin cambios · ${invalid.toLocaleString('es-MX')} omitidos`);status(`Archivo procesado: ${added.toLocaleString('es-MX')} nuevos; ${updated.toLocaleString('es-MX')} completados; ${unchanged.toLocaleString('es-MX')} existentes sin cambios; ${invalid.toLocaleString('es-MX')} inválidos. No se duplicaron OS.`,'ok')}
 function normalizeAccount(v){return norm(v).replace(/\s+/g,'')}
 function networkCandidates(v){const x=normalizeAccount(v);return x?[x]:[]}
 function networkFor(cuenta){return networkIndex.get(normalizeAccount(cuenta))||null}
@@ -248,8 +282,8 @@ function selectCell(c,a){selectedCell=c.id;const b=boundsFor(c);map.fitBounds(b,
 function render(){const ev=filtered(),a=analyze(ev);$('kEvents').textContent=ev.length.toLocaleString('es-MX');$('kAccounts').textContent=a.accounts.size.toLocaleString('es-MX');$('kRepeat').textContent=a.repeat.length.toLocaleString('es-MX');$('kCells').textContent=a.cells.filter(c=>c.supports).length.toLocaleString('es-MX');$('kImports').textContent=imports.length.toLocaleString('es-MX');draw(a);drawPoints(a);topRows(a);renderPon(a);updateSearchOverlay(a);if(selectedCell){const c=a.cells.find(z=>z.id===selectedCell);if(c){if(searchAccount&&!c.events.some(e=>e.cuenta===searchAccount))searchAccount='';selectCell(c,a)}else{$('cellDetail').textContent='El cuadrante seleccionado no tiene datos con los filtros actuales.'}}}
 $('searchGo').onclick=doMapSearch;$('mapSearch').addEventListener('keydown',e=>{if(e.key==='Enter')doMapSearch()});$('searchClear').onclick=clearMapSearch;$('searchNext').onclick=()=>{const i=searchLocations.indexOf(selectedCell),id=searchLocations[(i+1)%searchLocations.length],a=analyze(filtered()),c=a.cells.find(x=>x.id===id);if(c){selectCell(c,a);$('searchResult').textContent=`Ubicación ${((i+1)%searchLocations.length)+1} de ${searchLocations.length}: ${id}`}};
 $('ponScope').onchange=()=>renderPon(analyze(filtered()));
-$('networkFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;importProgress('Cargando base de red',f.name,5,'Leyendo archivo…');try{await ingestNetwork(f)}catch(err){importFailed(f.name,err.message||String(err));status(err.message||String(err),'error')}finally{e.target.value=''}};
-$('excelFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;importProgress('Cargando soportes',f.name,5,'Leyendo archivo…');try{await ingest(f)}catch(err){importFailed(f.name,err.message||String(err));status(err.message||String(err),'error')}finally{e.target.value=''}};
+$('networkFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;importProgress('Cargando base de red',f.name,5,'Leyendo archivo…');try{await requireStorage();await ingestNetwork(f)}catch(err){importFailed(f.name,err.message||String(err));status(err.message||String(err),'error')}finally{e.target.value=''}};
+$('excelFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;importProgress('Cargando soportes',f.name,5,'Leyendo archivo…');try{await requireStorage();await ingest(f)}catch(err){importFailed(f.name,err.message||String(err));status(err.message||String(err),'error')}finally{e.target.value=''}};
 $('pointsEnabled').onchange=()=>{pointsEnabled=$('pointsEnabled').checked;render()};
 $('pointsMode').onchange=()=>{pointsMode=$('pointsMode').value;render()};
 $('pointsScope').onchange=()=>{pointsScope=$('pointsScope').value;render()};
@@ -285,6 +319,41 @@ $('deleteWeeks').onclick=async()=>{
 $('weeksAll').onclick=()=>{document.querySelectorAll('#weeks input').forEach(i=>{i.checked=true;selectedWeekNums.add(i.value)});render()};$('weeksNone').onclick=()=>{selectedWeekNums.clear();document.querySelectorAll('#weeks input').forEach(i=>i.checked=false);render()};
 $('clustersAll').onclick=()=>{document.querySelectorAll('#clusters input').forEach(i=>{i.checked=true;selectedClusters.add(i.value)});render()};$('clustersNone').onclick=()=>{selectedClusters.clear();document.querySelectorAll('#clusters input').forEach(i=>i.checked=false);render()};
 $('top10On').onclick=()=>bulkVisibility('top',true);$('top10Off').onclick=()=>bulkVisibility('top',false);$('restOn').onclick=()=>bulkVisibility('rest',true);$('restOff').onclick=()=>bulkVisibility('rest',false);$('showAllQuadrants').onclick=()=>{quadrantVisibility='all';manualVisibleIds.clear();$('quadrantVisibility').value='all';selectedCell=null;render()};
-$('clearNetwork').onclick=async()=>{if(!confirm('¿Eliminar la base de red guardada localmente en este navegador?'))return;await clearStore(NETWORK);await clearStore(META);networkIndex.clear();networkMeta=null;renderNetworkInfo();render();status('Base de red local eliminada.','ok')};
-$('clearDb').onclick=async()=>{if(!confirm('¿Borrar todo el histórico guardado en este navegador?'))return;await clearStore(STORE);await clearStore(IMPORTS);selectedYears.clear();selectedWeekNums.clear();selectedClusters.clear();selectedCell=null;await reload();status('Histórico eliminado de este navegador.','ok')};
-(async()=>{try{db=await openDB();await reload();if(allEvents.length)status(`Histórico local cargado: ${allEvents.length.toLocaleString('es-MX')} eventos únicos.`,'ok')}catch(e){status('No se pudo abrir el almacenamiento local del navegador: '+e.message,'error')}})();
+// V1.40: only these four stores belong to Soportes. Never delete the entire IndexedDB database or origin storage.
+let deleteSelection={supports:false,network:false};
+function openDeleteDialog(preselect=''){
+ $('deleteSupports').checked=preselect==='supports';$('deleteNetwork').checked=preselect==='network';
+ $('deleteChoice').hidden=false;$('deleteFinal').hidden=true;$('deleteConfirm').checked=false;$('deleteModal').hidden=false;$('deleteModal').dataset.stage='select';
+ $('deleteExecute').disabled=true;$('deleteExecute').textContent='Continuar';
+ $('deleteSummary').textContent=`En este navegador: ${allEvents.length.toLocaleString('es-MX')} eventos de soporte y ${networkIndex.size.toLocaleString('es-MX')} cuentas de red. Selecciona qué deseas eliminar.`;
+ $('deleteError').textContent='';
+}
+function closeDeleteDialog(){$('deleteModal').hidden=true;}
+function updateDeleteButton(){const selected=$('deleteSupports').checked||$('deleteNetwork').checked;const stage=$('deleteModal').dataset.stage;$('deleteExecute').disabled=stage==='select'?!selected:!$('deleteConfirm').checked;}
+$('deleteSupports').onchange=updateDeleteButton;$('deleteNetwork').onchange=updateDeleteButton;$('deleteConfirm').onchange=updateDeleteButton;
+$('deleteCancel').onclick=closeDeleteDialog;
+$('deleteModal').addEventListener('click',e=>{if(e.target===$('deleteModal'))closeDeleteDialog()});
+$('clearDb').onclick=()=>openDeleteDialog();$('clearNetwork').onclick=()=>openDeleteDialog('network');
+$('deleteExecute').onclick=async()=>{
+ if($('deleteModal').dataset.stage==='select'){
+  deleteSelection={supports:$('deleteSupports').checked,network:$('deleteNetwork').checked};
+  if(!deleteSelection.supports&&!deleteSelection.network)return;
+  $('deleteModal').dataset.stage='confirm';$('deleteChoice').hidden=true;$('deleteFinal').hidden=false;
+  $('deleteConfirm').checked=false;$('deleteExecute').disabled=true;$('deleteExecute').textContent='Eliminar definitivamente';
+  const parts=[];if(deleteSelection.supports)parts.push(`${allEvents.length.toLocaleString('es-MX')} soportes y su historial de importaciones`);
+  if(deleteSelection.network)parts.push(`${networkIndex.size.toLocaleString('es-MX')} cuentas de la base de red`);
+  $('deleteFinalSummary').textContent='Se eliminarán de este navegador: '+parts.join(' y ')+'. No se afectará Repeat 60 ni Planta Externa.';
+  return;
+ }
+ if(!$('deleteConfirm').checked)return;
+ $('deleteExecute').disabled=true;$('deleteCancel').disabled=true;
+ try{
+  const stores=[...(deleteSelection.supports?[STORE,IMPORTS]:[]),...(deleteSelection.network?[NETWORK,META]:[])];
+  // One atomic IndexedDB transaction: either all selected stores are cleared, or none are.
+  await new Promise((resolve,reject)=>{const tx=db.transaction(stores,'readwrite');for(const name of stores)tx.objectStore(name).clear();tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error||new Error('Borrado cancelado'))});
+  if(deleteSelection.supports){selectedYears.clear();selectedWeekNums.clear();selectedClusters.clear();selectedCell=null;searchAccount='';searchLocations=[];}
+  await reload();closeDeleteDialog();status('Borrado definitivo completado en el almacenamiento local: '+(deleteSelection.supports?'soportes ':'')+(deleteSelection.network?'base de red':'')+'.','ok');
+ }catch(err){$('deleteError').textContent='No se pudo completar el borrado: '+(err.message||err);$('deleteExecute').disabled=false;status('Error de borrado: '+(err.message||err),'error')}
+ finally{$('deleteCancel').disabled=false}
+};
+(async()=>{setStorageReady(false);try{db=await openDB();await reload();setStorageReady(true);resolveStorageReady();if(allEvents.length)status(`Histórico local cargado: ${allEvents.length.toLocaleString('es-MX')} eventos únicos.`,'ok')}catch(e){setStorageReady(false);rejectStorageReady(e);status('No se pudo abrir el almacenamiento local del navegador: '+e.message,'error')}})();
