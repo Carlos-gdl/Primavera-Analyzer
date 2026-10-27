@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Soportes y Reincidencias · Primavera · V1.17</title>
+  <link rel="preconnect" href="https://unpkg.com">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <link rel="stylesheet" href="styles.0f70c6654a3e.css" />
+  <link rel="stylesheet" href="support-v72.8b4135ea58b8.css" />
+  <link rel="stylesheet" href="support-layout-v74.b9e4ae178c02.css" />
+<!-- PA75-BEGIN -->
+<meta name="pa-version" content="V-75">
+<script id="pa-release-config" type="application/json">{"release":"V-75-3201d3174b18","version":"V-75","page":"index"}</script>
+<script>/* Primavera Analyzer: comprobación de publicación, siempre relativa al repositorio abierto. */
+(()=>{'use strict';
+ const config=JSON.parse(document.getElementById('pa-release-config').textContent);
+ const root=new URL('./',location.href);
+ const online=/^https?:$/.test(location.protocol);
+ let panel;
+ function message(text,retry=false){
+  if(!panel){panel=document.createElement('div');panel.id='pa-release-status';panel.setAttribute('role','status');panel.style.cssText='position:fixed;inset:0;z-index:2147483647;display:grid;place-content:center;gap:14px;padding:24px;background:#0b2539;color:#eef7ff;font:15px Arial,sans-serif;text-align:center';document.body.appendChild(panel)}
+  panel.replaceChildren();const p=document.createElement('p');p.textContent=text;panel.appendChild(p);
+  if(retry){const b=document.createElement('button');b.textContent='Reintentar';b.style.cssText='padding:10px;border:1px solid #6d99b5;border-radius:7px;background:#17577f;color:white;cursor:pointer';b.onclick=()=>location.reload();panel.appendChild(b)}
+ }
+ async function manifest(){
+  const url=new URL('version.json',root);url.searchParams.set('_pa_check',Date.now()+'-'+Math.random().toString(36).slice(2));
+  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),15000);
+  try{const response=await fetch(url.href,{cache:'no-store',credentials:'same-origin',redirect:'error',signal:controller.signal});if(!response.ok)throw new Error('No se pudo consultar la versión publicada.');return await response.json()}finally{clearTimeout(timer)}
+ }
+ function validate(data){
+  if(!data||data.schema!==1||typeof data.release!=='string'||!/^V-\d+-[a-f0-9]{12}$/.test(data.release))throw new Error('El archivo de versión no es válido.');
+  const name=data.pages?.[config.page];
+  if(typeof name!=='string'||!new RegExp('^'+config.page+'\\.pa[0-9]+\\.[a-f0-9]{12}\\.html$').test(name))throw new Error('La página publicada no es válida.');
+  const url=new URL(name,root);if(url.origin!==root.origin||new URL('./',url).href!==root.href)throw new Error('La actualización debe permanecer en este repositorio.');return url;
+ }
+ async function scripts(){
+  for(const node of [...document.querySelectorAll('script[data-pa-pending]')]){
+   const s=document.createElement('script');for(const a of node.attributes){if(a.name!=='type'&&!a.name.startsWith('data-pa-'))s.setAttribute(a.name,a.value)}
+   s.async=false;
+   if(node.dataset.paSrc){await new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(new Error('Se agotó el tiempo al cargar un archivo.')),30000);s.onload=()=>{clearTimeout(timer);resolve()};s.onerror=()=>{clearTimeout(timer);reject(new Error('No se pudo cargar un archivo de la herramienta.'))};s.src=node.dataset.paSrc;node.replaceWith(s)})}
+   else{s.textContent=node.textContent;node.replaceWith(s)}
+  }
+ }
+ async function start(){
+  message('Comprobando la versión de Primavera Analyzer…');
+  try{
+   if(online){const data=await manifest(),target=validate(data);if(data.release!==config.release){if(target.pathname===location.pathname)throw new Error('La publicación está incompleta.');target.search=location.search;target.hash=location.hash;const ready=await fetch(target.href,{method:'HEAD',cache:'no-store',credentials:'same-origin',redirect:'error'});if(!ready.ok)throw new Error('La nueva publicación todavía no está disponible.');location.replace(target.href);return}}
+   if(online){const canonical=new URL(config.page+'.html',root);canonical.search=location.search;canonical.hash=location.hash;if(canonical.pathname!==location.pathname)history.replaceState(history.state,'',canonical.href)}
+   await scripts();document.title=document.title+' · '+config.version;panel.remove();window.dispatchEvent(new Event('resize'));
+  }catch(error){message('No se pudo verificar o cargar la versión actual. Comprueba la conexión y que la publicación haya terminado. '+error.message,true)}
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
+})();
+</script>
+<!-- PA75-END --></head>
+<body class="welcome-locked">\n  <!-- V1.19: bienvenida visual; independiente del motor de análisis -->
+  <div id="welcomeScreen" class="welcome-screen" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
+    <div class="welcome-glow welcome-glow-a" aria-hidden="true"></div>
+    <div class="welcome-glow welcome-glow-b" aria-hidden="true"></div>
+    <div class="welcome-particles" aria-hidden="true"></div>
+    <section class="welcome-card">
+      <img class="welcome-logo" src="logo_totalplay_referencia.42c12dc37b1a.png" alt="Totalplay">
+      <div class="welcome-texts"><h2 id="welcomeTitle">Bienvenidos</h2><h3>Herramienta de análisis operativo</h3><p>Distrito GDL La Primavera</p></div>
+    </section>
+    <nav class="welcome-links" aria-label="Seleccionar herramienta">
+      <button id="welcomeSupport" class="welcome-enter" type="button">Soporte</button>
+      <button id="welcomeRepeat" class="welcome-enter" type="button">Repeat</button>
+      <button id="welcomePlant" class="welcome-enter" type="button">Planta Externa</button>
+    </nav>
+  </div>
+
+  <header class="topbar supports-v71-header">
+    <div>
+      <h1>Soportes y Reincidencias</h1>
+      <p>Distrito GDL La Primavera · cuadrícula fija 300 × 300 m · V1.17</p>
+    </div>
+    <div class="filebox">
+      <button id="sc71-dateToggle" class="btn" type="button" aria-expanded="false" aria-controls="sc71-dateDropdown">Calendario</button>
+      <button id="deleteWeeks" class="btn danger" type="button">Eliminar semanas</button>
+      <label id="supportUploadLabel" class="btn primary upload-locked" for="excelFile" aria-disabled="true">Base de soporte</label>
+      <input id="excelFile" type="file" disabled accept=".xls,.xlsx,.xlsm" hidden />
+      <label id="networkUploadLabel" class="btn network-btn upload-locked" for="networkFile" aria-disabled="true">Base de clientes</label>
+      <input id="networkFile" type="file" disabled accept=".xls,.xlsx,.xlsm" hidden />
+      <label id="cleanupUploadLabel" class="btn cleanup-upload" for="cleanupFile">◈ Clean Up</label>
+      <input id="cleanupFile" type="file" accept=".kmz,.kml" hidden />
+      <button id="clearDb" class="btn danger" type="button">Borrar histórico</button>
+    </div>
+  </header>
+
+<div id="sc71-dateDropdown" class="sc71-calendar hidden" role="dialog" aria-label="Calendario de rango de fechas"><div class="calendar-heading"><button id="sc71-prevMonth" type="button" aria-label="Anterior">‹</button><button id="sc71-calendarTitle" type="button" class="calendar-title" title="Cambiar nivel de calendario"></button><button id="sc71-nextMonth" type="button" aria-label="Siguiente">›</button></div><div id="sc71-calendarWeekdays" class="calendar-weekdays"><span>Lu</span><span>Ma</span><span>Mi</span><span>Ju</span><span>Vi</span><span>Sá</span><span>Do</span></div><div id="sc71-calendarDays" class="calendar-days"></div><div class="calendar-actions"><button id="sc71-fullWeek" type="button">Semana completa</button><button id="sc71-fullMonth" type="button">Mes completo</button><button id="sc71-clearDates" type="button">Clear</button><button id="sc71-applyDates" type="button" class="orange">OK</button></div><small id="sc71-draftDatesLabel">Todas las fechas</small></div>
+  <dialog id="sc72-deleteDialog" class="sc72-delete-dialog" aria-labelledby="sc72-deleteTitle">
+    <div class="sc72-dialog-head"><h2 id="sc72-deleteTitle">Eliminar semanas cargadas</h2><button id="sc72-deleteClose" class="btn" type="button" aria-label="Cerrar">✕</button></div>
+    <p>Selecciona semanas completas. El borrado incluye todos sus soportes, independientemente de los filtros del mapa.</p>
+    <div class="row-actions"><button id="sc72-selectAll" class="btn" type="button">Todas</button><button id="sc72-selectNone" class="btn" type="button">Ninguna</button></div>
+    <div id="sc72-deleteList" class="sc72-delete-list"></div>
+    <p id="sc72-deleteSummary" role="status"></p>
+    <button id="sc72-deleteConfirm" class="btn danger" type="button" disabled>Eliminar seleccionadas</button>
+  </dialog>
+  <section id="status" class="status info">Carga el reporte Excel. El nombre del archivo puede cambiar; la estructura interna debe conservarse.</section>
+
+<div class="sc74-toolbar">  <section class="search-panel panel supports-v71-search"><label for="mapSearch"><strong>Localizar cuenta o cuadrante</strong></label><div class="search-actions"><input id="mapSearch" type="search" placeholder="Cuenta (10 dígitos) o Q_-38380-7835" autocomplete="off"><button id="searchGo" class="btn primary" type="button">Buscar</button><button id="searchNext" class="btn" type="button" hidden>Siguiente ubicación</button><button id="searchClear" class="btn" type="button">Limpiar</button></div><div id="searchResult" class="search-result" role="status" aria-live="polite">La búsqueda respeta los filtros activos.</div></section><nav class="controls sc74-controls" aria-label="Controles de Soportes"><details class="sc74-menu"><summary>Visualización</summary><div class="sc74-menu-content"><h2>Visualización</h2>
+        <div class="segmented" id="viewMode">
+          <button data-mode="supports" class="active">Soportes</button>
+          <button data-mode="repeat">Reincidencias</button>
+          <button data-mode="both">Ambos</button>
+        </div>
+
+        </div></details><details class="sc74-menu"><summary>Marcadores</summary><div class="sc74-menu-content"><section class="point-controls" aria-label="Visualización de puntos">
+          <h3>Visualización de puntos · V1.16</h3>
+          <label class="point-switch"><input id="pointsEnabled" type="checkbox"> Mostrar marcadores</label>
+          <label>Tipo de puntos
+            <select id="pointsMode"><option value="both">Soportes y reincidencias</option><option value="supports">Solo soportes</option><option value="repeat">Solo reincidencias</option></select>
+          </label>
+          <label>Alcance de puntos
+            <select id="pointsScope"><option value="visible">Solo cuadrantes visibles</option><option value="all">Todos los cuadrantes con datos</option></select>
+          </label>
+          <div class="point-legend"><span class="point-dot support-dot"></span> Soportes <span class="point-dot repeat-dot"></span> Reincidencias</div>
+          <div id="pointsInfo" class="small muted" aria-live="polite">Marcadores apagados.</div>
+        </section>
+
+
+        <!-- Controles internos conservados para compatibilidad; fechas seleccionadas desde Calendario. -->
+        <div hidden aria-hidden="true"><button id="yearsAll"></button><button id="yearsNone"></button><div id="years"></div><button id="weeksAll"></button><button id="weeksNone"></button><div id="weeks"></div></div>
+
+        </div></details><details class="sc74-menu"><summary>Clúster / estatus</summary><div class="sc74-menu-content"><h3>Filtros</h3>
+        <div class="filter-title">Cluster</div>
+        <div class="row-actions">
+          <button id="clustersAll" class="mini">Todos</button>
+          <button id="clustersNone" class="mini">Ninguno</button>
+        </div>
+        <div id="clusters" class="multi-list"><span class="muted">Sin datos</span></div>
+        <label>Estatus
+          <select id="statusFilter"><option value="">Todos</option></select>
+        </label>
+
+        </div></details><details class="sc74-menu"><summary>Bases / histórico</summary><div class="sc74-menu-content"><h3>Archivo / histórico</h3>
+        <div id="importInfo" class="small muted">Todavía no hay archivos cargados.</div>
+        <h3>Base de red</h3>
+        <div id="networkInfo" class="small muted">No hay base de red cargada.</div>
+        <button id="clearNetwork" class="mini network-clear" type="button">Eliminar base local</button>
+      </div></details></nav></div>
+  <main>
+    <section class="kpis">
+      <article><span>Eventos seleccionados</span><strong id="kEvents">0</strong></article>
+      <article><span>Cuentas únicas</span><strong id="kAccounts">0</strong></article>
+      <article><span>Clientes reincidentes</span><strong id="kRepeat">0</strong></article>
+      <article><span>Cuadrantes con soportes</span><strong id="kCells">0</strong></article>
+      <article id="cleanupKpi" class="cleanup-kpi" role="button" tabindex="0" aria-expanded="false" aria-controls="cleanupPanel"><span>Clean Up</span><strong id="kImports">0</strong></article>
+    </section>
+
+    <section id="cleanupPanel" class="panel cleanup-panel" hidden aria-label="Administrar polígonos Clean Up">
+      <div class="cleanup-head"><h2>Polígonos Clean Up</h2><button id="cleanupClose" class="mini" type="button">Cerrar</button></div>
+      <div class="cleanup-statuses"><label><input id="cleanupFinished" type="checkbox" checked> Terminados</label><label><input id="cleanupProgress" type="checkbox" checked> En proceso</label></div>
+      <div class="cleanup-actions"><button id="cleanupAllOn" class="mini" type="button">Encender todos</button><button id="cleanupAllOff" class="mini" type="button">Apagar todos</button></div>
+      <div id="cleanupInfo" class="small muted" aria-live="polite">Carga un KMZ/KML para comenzar.</div>
+      <div id="cleanupList" class="cleanup-list"></div>
+    </section>
+    <section class="workspace">
+
+
+      <section class="mapwrap">
+        <div id="map"></div><div id="sc71-periodLegend" class="sc71-period-legend" hidden aria-label="Colores por periodo"></div>
+        <div class="quadrant-visibility-control"><label for="quadrantVisibility">Cuadrantes visibles</label><select id="quadrantVisibility"><option value="all">Todos</option><option value="top1">Top 1</option><option value="top2">Top 2</option><option value="top3">Top 3</option><option value="top4">Top 4</option><option value="top5">Top 5</option><option value="top10">Top 10</option><option value="manual">Manual</option></select></div><button id="mapFullscreen" class="map-fullscreen-btn" type="button" title="Pantalla completa">⛶ Pantalla completa</button>
+        <div class="legend">
+          <div><span class="swatch supports"></span> Soportes: intensidad por eventos</div>
+          <div><span class="swatch repeat"></span> Reincidencias: clientes con ≥2 eventos</div>
+        </div>
+      </section>
+      <section class="analytics" aria-label="Panel de análisis">
+        <div class="analytics-tabs" role="group" aria-label="Secciones de análisis">
+          <input type="radio" name="analyticsView" id="tabZones" checked><label for="tabZones">Top 10 Soportes</label>
+          <input type="radio" name="analyticsView" id="tabCleanup"><label for="tabCleanup">Clean Up</label>
+          <input type="radio" name="analyticsView" id="tabPon"><label for="tabPon">PON</label>
+          <input type="radio" name="analyticsView" id="tabCompare"><label for="tabCompare">Coincidencias</label>
+          <input type="radio" name="analyticsView" id="tabDetail"><label for="tabDetail">Detalle</label>
+        </div>
+        <div class="analytics-content">
+          <div class="analytics-zones">
+    <section class="bulk-visibility panel" id="bulkVisibilityPanel">
+      <div class="bulk-visibility-title"><strong>Visibilidad rápida de cuadrantes</strong><span id="bulkVisibilityInfo">Controla el Top 10 y el resto del mapa sin modificar los cálculos.</span></div>
+      <div class="bulk-visibility-actions">
+        <div class="bulk-group"><span>Top 10</span><button id="top10On" class="mini" type="button">Encender todos</button><button id="top10Off" class="mini" type="button">Apagar todos</button></div>
+        <div class="bulk-group"><span>Fuera del Top 10</span><button id="restOn" class="mini" type="button">Encender todos</button><button id="restOff" class="mini" type="button">Apagar todos</button></div>
+        <button id="showAllQuadrants" class="mini bulk-reset" type="button">Encender todo el mapa</button>
+      </div>
+    </section>
+
+    <section class="rankings">
+      <article class="panel" id="supportsRanking">
+        <div class="panel-title"><h2>Top 10 zonas con más soportes</h2><span>Eventos por cuadrante</span><button class="mini kmz-all" data-kind="supports" type="button">Descargar Top 10 KMZ</button></div>
+        <div class="table-scroll"><table><thead><tr><th>Ver</th><th>#</th><th>Cuadrante</th><th>Cluster</th><th>Soportes</th><th>Reincidentes</th><th>Excel</th><th>KMZ</th></tr></thead><tbody id="topSupports"></tbody></table></div>
+      </article>
+      <article class="panel" id="repeatRanking">
+        <div class="panel-title"><h2>Top 10 zonas con más reincidencias</h2><span>Clientes reincidentes por cuadrante</span><button class="mini kmz-all" data-kind="repeat" type="button">Descargar Top 10 KMZ</button></div>
+        <div class="table-scroll"><table><thead><tr><th>Ver</th><th>#</th><th>Cuadrante</th><th>Cluster</th><th>Reincidentes</th><th>Soportes</th><th>Excel</th><th>KMZ</th></tr></thead><tbody id="topRepeat"></tbody></table></div>
+      </article>
+    </section>
+
+
+          </div>
+          <div class="analytics-cleanup">
+            <section class="panel"><div class="panel-title"><h2>Polígonos Clean Up</h2><span>Según los estados seleccionados</span></div>
+              <div class="table-scroll"><table><thead><tr><th>Ver</th><th>Polígono (nombre original)</th><th>Estado</th><th>Ubicar</th></tr></thead><tbody id="cleanupTable"></tbody></table></div>
+            </section>
+          </div>
+          <div class="analytics-pon">
+    <section class="network-quality panel" id="networkQualityPanel">
+      <div><strong>Cruce con base de red</strong><span id="networkQuality">Carga la base de red para habilitar análisis por PON.</span></div>
+    </section>
+
+    <section class="panel" style="margin-bottom:14px"><label for="ponScope"><strong>Concentración de incidencias por PON:</strong></label> <select id="ponScope"><option value="all">Todo el distrito (según filtros)</option><option value="topSupports">Top 10 cuadrantes con más soportes</option><option value="topRepeat">Top 10 cuadrantes con más reincidencias</option></select></section>
+    <!-- V-47: Ranking PON dinámico. El selector de Soportes/Reincidencias/Ambos sigue siendo el existente. -->
+    <section class="panel pon47" id="pon47Panel">
+      <div class="pon47-toolbar" id="pon47Toolbar">
+        <div class="panel-title"><h2 id="pon47Title">Ranking de puertos PON</h2><span id="pon47Subtitle">Según filtros activos</span></div>
+        <label for="pon47Limit">Mostrar <select id="pon47Limit"><option value="5">Top 5</option><option value="10" selected>Top 10</option><option value="15">Top 15</option><option value="20">Top 20</option><option value="25">Top 25</option></select></label>
+      </div>
+      <div id="pon47Ranking">
+        <div class="table-scroll"><table><thead><tr><th>#</th><th>OLT</th><th>Frame</th><th>Slot</th><th>Puerto</th><th>Soportes</th><th>Cuentas únicas</th><th>Reincidentes</th><th>Soportes adicionales</th><th>Detalle</th></tr></thead><tbody id="pon47Rows"><tr><td colspan="10" class="muted">Carga la base de clientes para consultar el ranking.</td></tr></tbody></table></div>
+      </div>
+      <div id="pon47Detail" hidden>
+        <div class="pon47-detail-head"><button type="button" class="mini" id="pon47Back">← Atrás</button><h2 id="pon47DetailTitle"></h2></div>
+        <div class="table-scroll"><table><thead><tr><th>Cuenta</th><th>Soportes registrados</th><th>¿Es reincidente?</th><th>Soportes adicionales</th></tr></thead><tbody id="pon47DetailRows"></tbody><tfoot id="pon47DetailTotal"></tfoot></table></div>
+      </div>
+    </section>
+
+          </div>
+          <div class="analytics-compare">
+    <section class="panel compare" id="comparePanel">
+      <div class="panel-title"><h2>Coincidencias Top 10</h2><span>Zonas que aparecen en ambos rankings</span></div>
+      <div id="compareSummary" class="compare-summary">Sin datos.</div>
+      <div class="table-scroll"><table><thead><tr><th>Cuadrante</th><th>Cluster</th><th>Pos. soportes</th><th>Soportes</th><th>Pos. reincidencias</th><th>Reincidentes</th><th>Coincide</th></tr></thead><tbody id="compareBody"></tbody></table></div>
+    </section>
+
+          </div>
+          <div class="analytics-detail">
+    <section class="panel detail">
+      <div class="panel-title"><h2>Detalle del cuadrante seleccionado</h2><span id="detailHint">Haz clic en un cuadrante o en un Top 10</span></div>
+      <div id="cellDetail" class="muted">Sin selección.</div>
+    </section>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script type="application/x-pa-pending" data-pa-pending="" data-pa-src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" data-pa-original-src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script type="application/x-pa-pending" data-pa-pending="" data-pa-src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" data-pa-original-src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script type="application/x-pa-pending" data-pa-pending="" data-pa-src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js" data-pa-original-src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <div id="importModal" class="import-modal-backdrop" hidden role="dialog" aria-modal="true" aria-labelledby="importModalTitle">
+    <div class="import-modal-card">
+      <div class="import-modal-heading"><span id="importModalIcon" aria-hidden="true">↻</span><strong id="importModalTitle">Cargando archivo…</strong></div>
+      <div id="importModalFile" class="import-modal-file"></div>
+      <progress id="importModalBar" max="100" value="0"></progress>
+      <div class="import-modal-progress"><span id="importModalDetail" aria-live="polite"></span><b id="importModalPercent">0%</b></div>
+      <div class="import-modal-actions"><button id="importModalAccept" type="button" hidden>Aceptar</button></div>
+    </div>
+  </div>
+
+  <!-- V1.40: borrado selectivo independiente de Soportes y Reincidencias -->
+  <div id="deleteModal" class="history-delete-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="deleteTitle" data-stage="select">
+    <section class="history-delete-card">
+      <h2 id="deleteTitle">Administrar histórico local</h2>
+      <p id="deleteSummary"></p>
+      <div id="deleteChoice" class="history-delete-choices">
+        <label><input type="checkbox" id="deleteSupports"> Borrar histórico de soportes (eventos, OS e importaciones)</label>
+        <label><input type="checkbox" id="deleteNetwork"> Borrar base de red (clientes e inventario)</label>
+      </div>
+      <div id="deleteFinal" hidden>
+        <p id="deleteFinalSummary"></p>
+        <p class="history-delete-warning">Esta acción no se puede deshacer. Para recuperar la información deberás importar nuevamente los Excel originales.</p>
+        <label><input type="checkbox" id="deleteConfirm"> Confirmo que deseo eliminar definitivamente los datos seleccionados.</label>
+      </div>
+      <p id="deleteError" class="history-delete-warning" role="alert"></p>
+      <div class="history-delete-actions"><button id="deleteCancel" type="button">Cancelar</button><button id="deleteExecute" type="button" disabled>Continuar</button></div>
+    </section>
+  </div>
+  <!-- V-43: cargar la lógica después de crear todos los elementos del modal de borrado. -->
+  <script type="application/x-pa-pending" data-pa-pending="" data-pa-src="app.e2eca8bfa8cf.js" data-pa-original-src="app.js"></script>
+  <script type="application/x-pa-pending" data-pa-pending="" data-pa-src="support-layout-v74.e9a867baec27.js" data-pa-original-src="support-layout-v74.js"></script>
+  <script type="application/x-pa-pending" data-pa-pending="" data-pa-src="support-calendar-v73.48d66cddfad9.js" data-pa-original-src="support-calendar-v73.js"></script>
+  <link rel="stylesheet" href="pon-v47.4510ca1f4ad8.css">
+  <script type="application/x-pa-pending" data-pa-pending="" data-pa-src="pon-v47.7789604d8d6a.js" data-pa-original-src="pon-v47.js"></script>
+  <script type="application/x-pa-pending" data-pa-pending="" data-pa-src="bienvenida.9bd70e99883e.js" data-pa-original-src="bienvenida.js"></script>
+  <script type="application/x-pa-pending" data-pa-pending="" data-pa-src="cleanup.5fe4a93d6ac4.js" data-pa-original-src="cleanup.js"></script>
+</body>
+</html>

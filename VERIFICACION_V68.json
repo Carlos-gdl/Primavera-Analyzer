@@ -1,0 +1,512 @@
+{
+  "CAMBIOS_TECNICOS_V49.md": {
+    "v67": "f0b0d2d5f42c7689f8b8a11ec0809ca7b11b153f96986681eb2d2d03e8c6b2ef",
+    "v68": "f0b0d2d5f42c7689f8b8a11ec0809ca7b11b153f96986681eb2d2d03e8c6b2ef",
+    "changed": false
+  },
+  "CAMBIOS_TECNICOS_V50.md": {
+    "v67": "d59c77fd1b39f7c389e4c2aa8969cb40d4417de73d73fc79ae937cd3e1660b97",
+    "v68": "d59c77fd1b39f7c389e4c2aa8969cb40d4417de73d73fc79ae937cd3e1660b97",
+    "changed": false
+  },
+  "CAMBIOS_TECNICOS_V51.md": {
+    "v67": "e65c0a87328fc9f2ed6e76d3d8ab181e1ee74a113cc0497cfba79d66ac7fbf64",
+    "v68": "e65c0a87328fc9f2ed6e76d3d8ab181e1ee74a113cc0497cfba79d66ac7fbf64",
+    "changed": false
+  },
+  "CAMBIOS_TECNICOS_V52.md": {
+    "v67": "0afe1acf972658d22811fab131d70ab8e174e3a974682e8db4db4388b72d460d",
+    "v68": "0afe1acf972658d22811fab131d70ab8e174e3a974682e8db4db4388b72d460d",
+    "changed": false
+  },
+  "CAMBIOS_TECNICOS_V53.md": {
+    "v67": "17ef3f4d5ae5cec869a8e56546eb97a554ae2d52bb72eb08625eba88139c1ca6",
+    "v68": "17ef3f4d5ae5cec869a8e56546eb97a554ae2d52bb72eb08625eba88139c1ca6",
+    "changed": false
+  },
+  "CAMBIOS_TECNICOS_V54.md": {
+    "v67": "668c0712ee882de36da1fbae2b16c67751c8871d2c36e17f80c523840e5372bb",
+    "v68": "668c0712ee882de36da1fbae2b16c67751c8871d2c36e17f80c523840e5372bb",
+    "changed": false
+  },
+  "CAMBIOS_TECNICOS_V55.md": {
+    "v67": "bbf729124383c5f5ac272de1f7fe88b4c266db3c1cdd8aa75b35d32dbc33bcf3",
+    "v68": "bbf729124383c5f5ac272de1f7fe88b4c266db3c1cdd8aa75b35d32dbc33bcf3",
+    "changed": false
+  },
+  "CAMBIOS_TECNICOS_V56.md": {
+    "v67": "4498f8753407ad5f40e432159a3cc8ed5d8873b61fa109f1094c6f6b043ed166",
+    "v68": "4498f8753407ad5f40e432159a3cc8ed5d8873b61fa109f1094c6f6b043ed166",
+    "changed": false
+  },
+  "CAMBIOS_TECNICOS_V58.md": {
+    "v67": "d8ca853e0e8deb7091cf448d8d633113c15fab8df61b03467e7c2dfd79df5809",
+    "v68": "d8ca853e0e8deb7091cf448d8d633113c15fab8df61b03467e7c2dfd79df5809",
+    "changed": false
+  },
+  "CAMBIOS_TECNICOS_V59.md": {
+    "v67": "b30996692898d96b100c7b5c391343b094279f210701e77a8a12d52d15f17b85",
+    "v68": "b30996692898d96b100c7b5c391343b094279f210701e77a8a12d52d15f17b85",
+    "changed": false
+  },
+  "CAMBIOS_TECNICOS_V60.md": {
+    "v67": "71a0c93cb6011469eb82ef3cbacd65ab1abbfb30d04a2505c0eaa739d66b6fae",
+    "v68": "71a0c93cb6011469eb82ef3cbacd65ab1abbfb30d04a2505c0eaa739d66b6fae",
+    "changed": false
+  },
+  "CAMBIOS_TECNICOS_V61.md": {
+    "v67": "632cb19437cc2a1921212316554bd00f52b729c33df7116ceaaa61110a66668e",
+    "v68": "632cb19437cc2a1921212316554bd00f52b729c33df7116ceaaa61110a66668e",
+    "changed": false
+  },
+  "CAMBIOS_TECNICOS_V62.md": {
+    "v67": "a8e65809fbd7098549674170702f02b6949c1067a30a988efcd5bcf517356ff4",
+    "v68": "a8e65809fbd7098549674170702f02b6949c1067a30a988efcd5bcf517356ff4",
+    "changed": false
+  },
+  "CAMBIOS_TECNICOS_V63.md": {
+    "v67": "01cb3b675de4ac4d2ec079ba1801cac41a58b27104d411283a574833ecfe33c6",
+    "v68": "01cb3b675de4ac4d2ec079ba1801cac41a58b27104d411283a574833ecfe33c6",
+    "changed": false
+  },
+  "CAMBIOS_TECNICOS_V64.md": {
+    "v67": "5e05be8de4fb152ded04b3b974fc8e60a98d385846671eba245a622540a9af51",
+    "v68": "5e05be8de4fb152ded04b3b974fc8e60a98d385846671eba245a622540a9af51",
+    "changed": false
+  },
+  "CAMBIOS_TECNICOS_V65.md": {
+    "v67": "0ee4eee6562a778dad33712cec134083de99b32f36ed75fb28bdf3d06207f777",
+    "v68": "0ee4eee6562a778dad33712cec134083de99b32f36ed75fb28bdf3d06207f777",
+    "changed": false
+  },
+  "CAMBIOS_TECNICOS_V66.md": {
+    "v67": "92fda4ef016710a18452e68f8e4c39d862e44a803e22470b5cd6a710e594cb16",
+    "v68": "92fda4ef016710a18452e68f8e4c39d862e44a803e22470b5cd6a710e594cb16",
+    "changed": false
+  },
+  "CAMBIOS_TECNICOS_V67.md": {
+    "v67": "4f02f913c7df8e1d6b71daf595d36cbeb26625bb0291a33a1fae26e75fbf0f5b",
+    "v68": "4f02f913c7df8e1d6b71daf595d36cbeb26625bb0291a33a1fae26e75fbf0f5b",
+    "changed": false
+  },
+  "LEEME.txt": {
+    "v67": "4813c947147375dcfbd6731d0c466883099d56901edcd089d7676f5738493bb0",
+    "v68": "4813c947147375dcfbd6731d0c466883099d56901edcd089d7676f5738493bb0",
+    "changed": false
+  },
+  "LEEME_AJUSTE_MARCADOR.txt": {
+    "v67": "93f5cd9821615179992226518b76669bc3ca06681d9a19517ed3be76a71c8130",
+    "v68": "93f5cd9821615179992226518b76669bc3ca06681d9a19517ed3be76a71c8130",
+    "changed": false
+  },
+  "LEEME_V-42.txt": {
+    "v67": "4846e35f506708fdd950679c87e7194d3870f41e3e1b7cf2d078f58037ad10d7",
+    "v68": "4846e35f506708fdd950679c87e7194d3870f41e3e1b7cf2d078f58037ad10d7",
+    "changed": false
+  },
+  "LEEME_V-43.txt": {
+    "v67": "e71731445a75e8cff1ee610cbda38d9a1c444e27715f829c406017db61cb27e3",
+    "v68": "e71731445a75e8cff1ee610cbda38d9a1c444e27715f829c406017db61cb27e3",
+    "changed": false
+  },
+  "LEEME_V-44.txt": {
+    "v67": "6477f33f69107b3bb440ddb8483bad369d0d70185e542deb9f103158e12ffe41",
+    "v68": "6477f33f69107b3bb440ddb8483bad369d0d70185e542deb9f103158e12ffe41",
+    "changed": false
+  },
+  "LEEME_V-45.txt": {
+    "v67": "d1b74dcf548e1c143a15b9cdd842769435766d298c28e988058fa61620700f0d",
+    "v68": "d1b74dcf548e1c143a15b9cdd842769435766d298c28e988058fa61620700f0d",
+    "changed": false
+  },
+  "LEEME_V-46.txt": {
+    "v67": "12159442f24be5892cec5605ccf5de1d25a69f3c006468a30a0a2df5e2359d31",
+    "v68": "12159442f24be5892cec5605ccf5de1d25a69f3c006468a30a0a2df5e2359d31",
+    "changed": false
+  },
+  "LEEME_V-48.txt": {
+    "v67": "2f5733995b43fc50fcf6e92e72de18af7ededaa3d9f5a50dd8e187d905ad423e",
+    "v68": "2f5733995b43fc50fcf6e92e72de18af7ededaa3d9f5a50dd8e187d905ad423e",
+    "changed": false
+  },
+  "LEEME_V-49.txt": {
+    "v67": "c555b71579043707934880396235be6285efadec9485fd32f455b07ea7c5af31",
+    "v68": "c555b71579043707934880396235be6285efadec9485fd32f455b07ea7c5af31",
+    "changed": false
+  },
+  "LEEME_V-50.txt": {
+    "v67": "d7f4a00ace040e7a63dc6de3ec5ccdafc036ba1ee6689e7d1d2ad1a34f6f2c16",
+    "v68": "d7f4a00ace040e7a63dc6de3ec5ccdafc036ba1ee6689e7d1d2ad1a34f6f2c16",
+    "changed": false
+  },
+  "LEEME_V-51.txt": {
+    "v67": "b69a83b6a94b1f7830ec4ac8824d347ccdeb710eec06ec3ff5b595f25507c122",
+    "v68": "b69a83b6a94b1f7830ec4ac8824d347ccdeb710eec06ec3ff5b595f25507c122",
+    "changed": false
+  },
+  "LEEME_V-52.txt": {
+    "v67": "2dde4eecdcac6136dacd3ff57968a8ff7444c0cd1cc589142746921d5a810441",
+    "v68": "2dde4eecdcac6136dacd3ff57968a8ff7444c0cd1cc589142746921d5a810441",
+    "changed": false
+  },
+  "LEEME_V-53.txt": {
+    "v67": "32eaea4b9d4442e017d8e68cc49de58535fc57086e2d209ddf9e05171065e5d8",
+    "v68": "32eaea4b9d4442e017d8e68cc49de58535fc57086e2d209ddf9e05171065e5d8",
+    "changed": false
+  },
+  "LEEME_V-57.txt": {
+    "v67": "d6e1d0a8eaeee53da963cb1f4283d88f23f2296f1a18ef7e8fefccfdce3a3d5e",
+    "v68": "d6e1d0a8eaeee53da963cb1f4283d88f23f2296f1a18ef7e8fefccfdce3a3d5e",
+    "changed": false
+  },
+  "LEEME_V-59.txt": {
+    "v67": "3f074d2f1cb657b666ea68a482977cc4d9584e0e91e553fed20be5cf8da8f3f0",
+    "v68": "3f074d2f1cb657b666ea68a482977cc4d9584e0e91e553fed20be5cf8da8f3f0",
+    "changed": false
+  },
+  "LEEME_V-61.txt": {
+    "v67": "42184d78a217c75f520c45e5d67ad9695093fc2407d364b826d81900fd6f68ba",
+    "v68": "42184d78a217c75f520c45e5d67ad9695093fc2407d364b826d81900fd6f68ba",
+    "changed": false
+  },
+  "LEEME_V-67.txt": {
+    "v67": "696f95181b85e3d8168bd9d84d0174e1e0de5d8ad8f9b24a032ef521c48202f7",
+    "v68": "696f95181b85e3d8168bd9d84d0174e1e0de5d8ad8f9b24a032ef521c48202f7",
+    "changed": false
+  },
+  "LEEME_V1.20.txt": {
+    "v67": "4805fbde4b02aa4f157d766dfab593800106ee57188b95e316eacb6ca4b3e226",
+    "v68": "4805fbde4b02aa4f157d766dfab593800106ee57188b95e316eacb6ca4b3e226",
+    "changed": false
+  },
+  "LEEME_V1.21.txt": {
+    "v67": "71114f4a5d9747f3d1c0e6af0bb16d1f3455c1b5dbe833019b68fd504ddfc9ad",
+    "v68": "71114f4a5d9747f3d1c0e6af0bb16d1f3455c1b5dbe833019b68fd504ddfc9ad",
+    "changed": false
+  },
+  "LEEME_V1.22.txt": {
+    "v67": "baed163d6af8e43b091dc1dcb3acdf8271c0b5e40bf3a95f5e9abdad78333edd",
+    "v68": "baed163d6af8e43b091dc1dcb3acdf8271c0b5e40bf3a95f5e9abdad78333edd",
+    "changed": false
+  },
+  "LEEME_V1.23.txt": {
+    "v67": "72a1d2269c46a231a194bbce24c6361bb92c83d2efd5240dbaa76551d36b5a16",
+    "v68": "72a1d2269c46a231a194bbce24c6361bb92c83d2efd5240dbaa76551d36b5a16",
+    "changed": false
+  },
+  "LEEME_V1.24.txt": {
+    "v67": "b1478c7802e2247cff50d31a660b8400a8f1f72d65db9a2dfaeafe84ed38bcff",
+    "v68": "b1478c7802e2247cff50d31a660b8400a8f1f72d65db9a2dfaeafe84ed38bcff",
+    "changed": false
+  },
+  "LEEME_V1.25.txt": {
+    "v67": "898ec36dc4f1c1fe432039ef2dd86c1f2406ab4b7ef82c4bc537e0f95c5caebd",
+    "v68": "898ec36dc4f1c1fe432039ef2dd86c1f2406ab4b7ef82c4bc537e0f95c5caebd",
+    "changed": false
+  },
+  "LEEME_V1.27.txt": {
+    "v67": "ab2edd5c20adfe19c613b972363ef4cb05ab68d4cb9704b708e8ce92b2c1ddd9",
+    "v68": "ab2edd5c20adfe19c613b972363ef4cb05ab68d4cb9704b708e8ce92b2c1ddd9",
+    "changed": false
+  },
+  "LEEME_V1.28.txt": {
+    "v67": "4dfa8777e773d0ed8b49f944bd0889622838d3e30e72405d6ae209307ebdfac5",
+    "v68": "4dfa8777e773d0ed8b49f944bd0889622838d3e30e72405d6ae209307ebdfac5",
+    "changed": false
+  },
+  "LEEME_V1.29.txt": {
+    "v67": "ce557662173143105f13fca104d124c335a9f9a9cac871c3edc6732d37e34320",
+    "v68": "ce557662173143105f13fca104d124c335a9f9a9cac871c3edc6732d37e34320",
+    "changed": false
+  },
+  "LEEME_V1.30.txt": {
+    "v67": "c45807df1f874e6eb85f36c5c02bbec26c20027c39920ac874426ecbc07c4d7b",
+    "v68": "c45807df1f874e6eb85f36c5c02bbec26c20027c39920ac874426ecbc07c4d7b",
+    "changed": false
+  },
+  "LEEME_V1.31.txt": {
+    "v67": "9434827a920fafa604a296203fccd5e42aafe0ff36ecd923123b4a26a438e17e",
+    "v68": "9434827a920fafa604a296203fccd5e42aafe0ff36ecd923123b4a26a438e17e",
+    "changed": false
+  },
+  "LEEME_V1.33.txt": {
+    "v67": "6ba3e361aa4d54a6c5061d73219ef55b25c4f80cd9a329b1ff76d7281896bff9",
+    "v68": "6ba3e361aa4d54a6c5061d73219ef55b25c4f80cd9a329b1ff76d7281896bff9",
+    "changed": false
+  },
+  "LEEME_V1.34.txt": {
+    "v67": "fa5e25d1ca45e70c47c8e4e42650248209e17bf347f4c4710118ad1810c43def",
+    "v68": "fa5e25d1ca45e70c47c8e4e42650248209e17bf347f4c4710118ad1810c43def",
+    "changed": false
+  },
+  "LEEME_V1.35.txt": {
+    "v67": "73257b71669cd63bd2d4638564572f55490f2dce9cf1d861e3e43f8125e967b2",
+    "v68": "73257b71669cd63bd2d4638564572f55490f2dce9cf1d861e3e43f8125e967b2",
+    "changed": false
+  },
+  "LEEME_V1.36.txt": {
+    "v67": "f04fb69095c81d07be6dea438188daa79c0b0cca9f2f3e7a2aa569d2b0fb6358",
+    "v68": "f04fb69095c81d07be6dea438188daa79c0b0cca9f2f3e7a2aa569d2b0fb6358",
+    "changed": false
+  },
+  "LEEME_V1.37.txt": {
+    "v67": "99ed69072854efa90cfb0448be17e3c0174d4304c2ac497a5f5d107dc0aea1c1",
+    "v68": "99ed69072854efa90cfb0448be17e3c0174d4304c2ac497a5f5d107dc0aea1c1",
+    "changed": false
+  },
+  "LEEME_V1.38.txt": {
+    "v67": "9fa27c94d61276fe2cdc3378dda14476d98df5a6505f3d6349b2df7bf16f21ca",
+    "v68": "9fa27c94d61276fe2cdc3378dda14476d98df5a6505f3d6349b2df7bf16f21ca",
+    "changed": false
+  },
+  "LEEME_V1.39.txt": {
+    "v67": "c50be7504ee87d5d0fae76426a47051c90381bb8ad9b0ff263b1787f94fdf47b",
+    "v68": "c50be7504ee87d5d0fae76426a47051c90381bb8ad9b0ff263b1787f94fdf47b",
+    "changed": false
+  },
+  "LEEME_V1.40.txt": {
+    "v67": "c8b45675b6f71f0dfc09cada3398f2a91b9a53f21a4b21d0ed72291ec5755bb5",
+    "v68": "c8b45675b6f71f0dfc09cada3398f2a91b9a53f21a4b21d0ed72291ec5755bb5",
+    "changed": false
+  },
+  "PROMPT_MAESTRO_HISTORICO_V1_A_V49.md": {
+    "v67": "fc5030dd6a32579f0378f510383e0bc7c1cd9d7a2d9ecbe74735ef38b91c49d6",
+    "v68": "fc5030dd6a32579f0378f510383e0bc7c1cd9d7a2d9ecbe74735ef38b91c49d6",
+    "changed": false
+  },
+  "PROMPT_MAESTRO_HISTORICO_V1_A_V50.md": {
+    "v67": "1ca5ae8086d60e550f9b1b3f8f6fcee4fcd3e6d85679af96f1ef410f98c90f3a",
+    "v68": "1ca5ae8086d60e550f9b1b3f8f6fcee4fcd3e6d85679af96f1ef410f98c90f3a",
+    "changed": false
+  },
+  "PROMPT_MAESTRO_HISTORICO_V1_A_V51.md": {
+    "v67": "90f14ba2cd20bb2c2603985cc0c073f4694e6d3a6c98a3c2b3be8f5635ccd700",
+    "v68": "90f14ba2cd20bb2c2603985cc0c073f4694e6d3a6c98a3c2b3be8f5635ccd700",
+    "changed": false
+  },
+  "PROMPT_MAESTRO_HISTORICO_V1_A_V52.md": {
+    "v67": "7026a48c83e05546ace7acd91336188a2dd00ccef6ad84570100e09007edfd6e",
+    "v68": "7026a48c83e05546ace7acd91336188a2dd00ccef6ad84570100e09007edfd6e",
+    "changed": false
+  },
+  "PROMPT_MAESTRO_HISTORICO_V1_A_V53.md": {
+    "v67": "437c21624894b97c73e196aa397ce6c910b758ebd1f87060968ec47fa120870e",
+    "v68": "437c21624894b97c73e196aa397ce6c910b758ebd1f87060968ec47fa120870e",
+    "changed": false
+  },
+  "PROMPT_MAESTRO_HISTORICO_V1_A_V55.md": {
+    "v67": "9604bbf0f2b6c16f7474f9ba1b47ed6a6a97dc2befe60a0fade60ad44ad52810",
+    "v68": "9604bbf0f2b6c16f7474f9ba1b47ed6a6a97dc2befe60a0fade60ad44ad52810",
+    "changed": false
+  },
+  "PROMPT_MAESTRO_HISTORICO_V1_A_V56.md": {
+    "v67": "fbb32e39647a429b200459adb9602243aeb827f22b898520608f8c7937d5ed8d",
+    "v68": "fbb32e39647a429b200459adb9602243aeb827f22b898520608f8c7937d5ed8d",
+    "changed": false
+  },
+  "PROMPT_MAESTRO_HISTORICO_V1_A_V58.md": {
+    "v67": "d3bef50a89158c9999e5d1659bdef5f5542ce2cb4bdadfa54fc6e03c74c06c1f",
+    "v68": "d3bef50a89158c9999e5d1659bdef5f5542ce2cb4bdadfa54fc6e03c74c06c1f",
+    "changed": false
+  },
+  "PROMPT_MAESTRO_HISTORICO_V1_A_V59.md": {
+    "v67": "26c2ace05fe5e5530af43b52450908175e567eb3f2cc7b71f65fee8042f313ae",
+    "v68": "26c2ace05fe5e5530af43b52450908175e567eb3f2cc7b71f65fee8042f313ae",
+    "changed": false
+  },
+  "PROMPT_MAESTRO_HISTORICO_V1_A_V60.md": {
+    "v67": "60011ed991a6e483dbe6ff416fab45964840a69bd23499bfa000190e3d215003",
+    "v68": "60011ed991a6e483dbe6ff416fab45964840a69bd23499bfa000190e3d215003",
+    "changed": false
+  },
+  "PROMPT_MAESTRO_HISTORICO_V1_A_V61.md": {
+    "v67": "c187534c0c75d2340c451da2633d5a9f4b07c83fd0ca2c209df7efd7275cd80d",
+    "v68": "c187534c0c75d2340c451da2633d5a9f4b07c83fd0ca2c209df7efd7275cd80d",
+    "changed": false
+  },
+  "PROMPT_MAESTRO_HISTORICO_V1_A_V62.md": {
+    "v67": "54d9442b72a32675d4567dd68b48edac91fa197b463e9b67baf44c9fe849285a",
+    "v68": "54d9442b72a32675d4567dd68b48edac91fa197b463e9b67baf44c9fe849285a",
+    "changed": false
+  },
+  "PROMPT_MAESTRO_HISTORICO_V1_A_V63.md": {
+    "v67": "f47d6afd6bba5288bde49839439fd4b87422ec7ad593ea9f12ce73676cefdfcf",
+    "v68": "f47d6afd6bba5288bde49839439fd4b87422ec7ad593ea9f12ce73676cefdfcf",
+    "changed": false
+  },
+  "PROMPT_MAESTRO_HISTORICO_V1_A_V64.md": {
+    "v67": "f8368ff9af2a8e7306e09d319b640d08a7bc47c09fe33e0d878c88991a0a3b1f",
+    "v68": "f8368ff9af2a8e7306e09d319b640d08a7bc47c09fe33e0d878c88991a0a3b1f",
+    "changed": false
+  },
+  "PROMPT_MAESTRO_HISTORICO_V1_A_V65.md": {
+    "v67": "4c19584118e15a850784612cc59de142904c19f30d8377408e0a297768773db4",
+    "v68": "4c19584118e15a850784612cc59de142904c19f30d8377408e0a297768773db4",
+    "changed": false
+  },
+  "PROMPT_MAESTRO_HISTORICO_V1_A_V66.md": {
+    "v67": "297fbe540af4ea8e44c47c276aedfcf905e8b5e9328eca7234ffbda459e83d07",
+    "v68": "297fbe540af4ea8e44c47c276aedfcf905e8b5e9328eca7234ffbda459e83d07",
+    "changed": false
+  },
+  "PROMPT_MAESTRO_HISTORICO_V1_A_V67.md": {
+    "v67": "0dbbe529f38e31c67865978e9611e5cfec77b305b6b00e10a774fab95b3fd107",
+    "v68": "0dbbe529f38e31c67865978e9611e5cfec77b305b6b00e10a774fab95b3fd107",
+    "changed": false
+  },
+  "PROMPT_MAESTRO_V-42.md": {
+    "v67": "0cf174a24bc073277898c5b49a93f3f2b6a2097bf9280d0779e449b2b1a19404",
+    "v68": "0cf174a24bc073277898c5b49a93f3f2b6a2097bf9280d0779e449b2b1a19404",
+    "changed": false
+  },
+  "PROMPT_MAESTRO_V-43.md": {
+    "v67": "62449d2dd2c7c01c2f12405d0198364e539d373aed0e00211c25517a4c78020b",
+    "v68": "62449d2dd2c7c01c2f12405d0198364e539d373aed0e00211c25517a4c78020b",
+    "changed": false
+  },
+  "PROMPT_MAESTRO_V-44.md": {
+    "v67": "6c2cbcd0bb33bfff765f095d9a535791f0ea831ccea6809746b8ee8b25cc905e",
+    "v68": "6c2cbcd0bb33bfff765f095d9a535791f0ea831ccea6809746b8ee8b25cc905e",
+    "changed": false
+  },
+  "PROMPT_MAESTRO_V-45.md": {
+    "v67": "d0032fe6cd7f551ed754881524b252c9a4b8b0cf43ccfd9b9d0dc044870eac5a",
+    "v68": "d0032fe6cd7f551ed754881524b252c9a4b8b0cf43ccfd9b9d0dc044870eac5a",
+    "changed": false
+  },
+  "PROMPT_MAESTRO_V-46.md": {
+    "v67": "02eff845185cc857ccd1dfab484f2e51f580e70fcb69d519af5289088b1d57f4",
+    "v68": "02eff845185cc857ccd1dfab484f2e51f580e70fcb69d519af5289088b1d57f4",
+    "changed": false
+  },
+  "PROMPT_MAESTRO_V-47.md": {
+    "v67": "d4abb401bb29715e1e085912ccb5e6fa38ad7efd14faabaee96ee6c890356241",
+    "v68": "d4abb401bb29715e1e085912ccb5e6fa38ad7efd14faabaee96ee6c890356241",
+    "changed": false
+  },
+  "PROMPT_MAESTRO_V-48.md": {
+    "v67": "03fc2eaf66934dadfeffbd11e6cb901af20dda0afcf7bac2b9c4c808a7aa1559",
+    "v68": "03fc2eaf66934dadfeffbd11e6cb901af20dda0afcf7bac2b9c4c808a7aa1559",
+    "changed": false
+  },
+  "PROMPT_MAESTRO_V1.34.md": {
+    "v67": "fac1dcf494de971832961f722c50028a58efa9ca52756ef966cdb1a9fab4210f",
+    "v68": "fac1dcf494de971832961f722c50028a58efa9ca52756ef966cdb1a9fab4210f",
+    "changed": false
+  },
+  "PROMPT_MAESTRO_V1.35.md": {
+    "v67": "b667d0cfc8ee6aa7ece52119662bdb51a5c7bd9445e1f992888575f1c6c9623d",
+    "v68": "b667d0cfc8ee6aa7ece52119662bdb51a5c7bd9445e1f992888575f1c6c9623d",
+    "changed": false
+  },
+  "PROMPT_MAESTRO_V1.36.md": {
+    "v67": "066fb36a491447a6623b6ef2eb8a8d5abc9a11944d74084d3fc4666721f262df",
+    "v68": "066fb36a491447a6623b6ef2eb8a8d5abc9a11944d74084d3fc4666721f262df",
+    "changed": false
+  },
+  "PROMPT_MAESTRO_V1.37.md": {
+    "v67": "6cb8a09d2ad7801128fa2587ef019363e9f591d44a424b7b15869a75faf3f56e",
+    "v68": "6cb8a09d2ad7801128fa2587ef019363e9f591d44a424b7b15869a75faf3f56e",
+    "changed": false
+  },
+  "PROMPT_MAESTRO_V1.38.md": {
+    "v67": "28f4c660709f0f76159a4834ec8e3b6c5118bedc454e03a51bc090ebce3f3361",
+    "v68": "28f4c660709f0f76159a4834ec8e3b6c5118bedc454e03a51bc090ebce3f3361",
+    "changed": false
+  },
+  "PROMPT_MAESTRO_V1.39.md": {
+    "v67": "8165a14cc5d9b3d95fa559cfa573cf406132e3f0b759e6652788a8eccd82b8d5",
+    "v68": "8165a14cc5d9b3d95fa559cfa573cf406132e3f0b759e6652788a8eccd82b8d5",
+    "changed": false
+  },
+  "PROMPT_MAESTRO_V1.40.md": {
+    "v67": "205ce2d3233fccae3b660532ef44ceae5f6a0bd737f4aea46cb487787e166091",
+    "v68": "205ce2d3233fccae3b660532ef44ceae5f6a0bd737f4aea46cb487787e166091",
+    "changed": false
+  },
+  "app.js": {
+    "v67": "9235afa73ed0c485d3eda2dadeb2dcec836c442611a0d45fe9c108451471bfc6",
+    "v68": "9235afa73ed0c485d3eda2dadeb2dcec836c442611a0d45fe9c108451471bfc6",
+    "changed": false
+  },
+  "bienvenida.js": {
+    "v67": "9bd70e99883ea276e5575f1157959462f9a8bdd638d28e5019287e05b0b7fc2e",
+    "v68": "9bd70e99883ea276e5575f1157959462f9a8bdd638d28e5019287e05b0b7fc2e",
+    "changed": false
+  },
+  "cleanup.js": {
+    "v67": "5fe4a93d6ac4720949da54ad70efa789da5f315d53b9111cc91f9729bbd9f938",
+    "v68": "5fe4a93d6ac4720949da54ad70efa789da5f315d53b9111cc91f9729bbd9f938",
+    "changed": false
+  },
+  "coverage-v53.js": {
+    "v67": "5b84c68b68d1e92c848dd10ab52971de4ffcf83110950f74923d30ddccfd7665",
+    "v68": "3c312ba4c611be4223b36689e38473929fc59eda92f56fcde8a26a1aec6da8e5",
+    "changed": true
+  },
+  "index.html": {
+    "v67": "cf53c1abeb2f4e6ee7adf18cac669fcf1546688b6346235a8e8901a66ef82836",
+    "v68": "cf53c1abeb2f4e6ee7adf18cac669fcf1546688b6346235a8e8901a66ef82836",
+    "changed": false
+  },
+  "logo_totalplay_referencia.png": {
+    "v67": "42c12dc37b1ac09395580df2dd5d20286f141c48b21a69b315dca000d0e8270f",
+    "v68": "42c12dc37b1ac09395580df2dd5d20286f141c48b21a69b315dca000d0e8270f",
+    "changed": false
+  },
+  "masivos.css": {
+    "v67": "8ef8e9cd7112ec4ff382549498304a6dbcf1f8c12e194aa41dfa35332149801a",
+    "v68": "25463dd859257506c3b87b989690fc8804cf42c3c2d5ee17d189ff805827cfe4",
+    "changed": true
+  },
+  "masivos.html": {
+    "v67": "7404b876193d7085abe10f62af6e386705fec606f295e4b7cecadb6d332f1551",
+    "v68": "b7340568f93bb5b4ede04a33abe4bd9994fd7827e950ba4942bb6ea0b92bc87a",
+    "changed": true
+  },
+  "masivos.js": {
+    "v67": "e02bd866d83f8d32315eeafa14f46f33344e371df1dc44875d61bf96f41889b3",
+    "v68": "7a396cc94fd822c804314cb4635403fb7fdd64333d0638aa0da3828928c36c65",
+    "changed": true
+  },
+  "peonias_inferior.png": {
+    "v67": "8e8d527e72726681ddeedc0e5079bf9b741df121db6b4b5629293bdfbf1dff88",
+    "v68": "8e8d527e72726681ddeedc0e5079bf9b741df121db6b4b5629293bdfbf1dff88",
+    "changed": false
+  },
+  "peonias_superior.png": {
+    "v67": "fd2093d68213bb109834226c8bbc1cd06e8f47ea7fc6c617ca555933978290bb",
+    "v68": "fd2093d68213bb109834226c8bbc1cd06e8f47ea7fc6c617ca555933978290bb",
+    "changed": false
+  },
+  "pon-v47.css": {
+    "v67": "4510ca1f4ad8f03eada4355f7b25e488aa5c583403a918b1852ceb2cff748d73",
+    "v68": "4510ca1f4ad8f03eada4355f7b25e488aa5c583403a918b1852ceb2cff748d73",
+    "changed": false
+  },
+  "pon-v47.js": {
+    "v67": "7789604d8d6ad42e4ba0d3c5e0f49096a2d57dfbffcf76113f5d143f675eb33e",
+    "v68": "7789604d8d6ad42e4ba0d3c5e0f49096a2d57dfbffcf76113f5d143f675eb33e",
+    "changed": false
+  },
+  "repeat60.css": {
+    "v67": "a05cb3d2f991376b20a8b99697adc6638ca6f37b2ef041add6345139edb1bd40",
+    "v68": "a05cb3d2f991376b20a8b99697adc6638ca6f37b2ef041add6345139edb1bd40",
+    "changed": false
+  },
+  "repeat60.html": {
+    "v67": "4772856baa5956a686cc277a3be2419d09e26187526309d9b7bd1e87b3f1f249",
+    "v68": "4772856baa5956a686cc277a3be2419d09e26187526309d9b7bd1e87b3f1f249",
+    "changed": false
+  },
+  "repeat60.js": {
+    "v67": "10eb1e5f97da1a9fad205cbf2727582a997ce42ade10328f2891d504c696e49f",
+    "v68": "10eb1e5f97da1a9fad205cbf2727582a997ce42ade10328f2891d504c696e49f",
+    "changed": false
+  },
+  "styles.css": {
+    "v67": "0f70c6654a3edccf1f9ab119eb80fdc74bb826799a530cbc3c0dc398e54c0733",
+    "v68": "0f70c6654a3edccf1f9ab119eb80fdc74bb826799a530cbc3c0dc398e54c0733",
+    "changed": false
+  }
+}
