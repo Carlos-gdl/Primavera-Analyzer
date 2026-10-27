@@ -1,10 +1,10 @@
 {
   "schema": 1,
-  "version": "V-75",
-  "release": "V-75-3201d3174b18",
+  "version": "V-77",
+  "release": "V-77-6857cf3d8911",
   "pages": {
-    "index": "index.pa75.3201d3174b18.html",
-    "masivos": "masivos.pa75.3201d3174b18.html",
-    "repeat60": "repeat60.pa75.3201d3174b18.html"
+    "index": "index.pa77.6857cf3d8911.html",
+    "masivos": "masivos.pa77.6857cf3d8911.html",
+    "repeat60": "repeat60.pa77.6857cf3d8911.html"
   }
 }

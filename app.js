@@ -347,4 +347,10 @@ $('deleteExecute').onclick=async()=>{
  }catch(err){$('deleteError').textContent='No se pudo completar el borrado: '+(err.message||err);$('deleteExecute').disabled=false;status('Error de borrado: '+(err.message||err),'error')}
  finally{$('deleteCancel').disabled=false}
 };
-(async()=>{setStorageReady(false);try{db=await openDB();await reload();setStorageReady(true);resolveStorageReady();if(allEvents.length)status(`Histórico local cargado: ${allEvents.length.toLocaleString('es-MX')} eventos únicos.`,'ok')}catch(e){setStorageReady(false);rejectStorageReady(e);status('No se pudo abrir el almacenamiento local del navegador: '+e.message,'error')}})();
+// V-76: el arranque se invoca al final de las dependencias de Soportes.
+let supportStartPromiseV76=null;
+function startSupportsV76(){
+ if(supportStartPromiseV76)return supportStartPromiseV76;
+ supportStartPromiseV76=(async()=>{setStorageReady(false);try{db=await openDB();await reload();setStorageReady(true);resolveStorageReady();if(allEvents.length)status(`Histórico local cargado: ${allEvents.length.toLocaleString('es-MX')} eventos únicos.`,'ok')}catch(e){setStorageReady(false);rejectStorageReady(e);status('No se pudo abrir el almacenamiento local del navegador: '+e.message,'error')}})();
+ return supportStartPromiseV76;
+}

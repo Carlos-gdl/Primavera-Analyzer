@@ -1,0 +1,6 @@
+/* V-77: únicamente ubicación de los dos botones de fechas en Soportes. */
+.sc77-date-actions{display:flex;align-items:center;gap:7px;flex:0 0 auto}
+.sc77-date-actions .btn{flex:0 0 auto;white-space:nowrap}
+@media(max-width:1350px){.sc74-toolbar{flex-wrap:wrap}.sc74-toolbar .supports-v71-search{flex:0 1 520px}.sc74-toolbar .sc74-controls{flex:1 1 auto;flex-wrap:wrap}.sc77-date-actions{padding:4px 0}}
+@media(max-width:1050px){.sc74-toolbar .supports-v71-search{flex:1 1 400px}.sc77-date-actions{padding:4px 10px}}
+@media(max-width:650px){.sc74-toolbar .supports-v71-search{flex-basis:100%}.sc77-date-actions{padding:4px 10px}.sc74-toolbar .sc74-controls{flex-basis:100%}}
