@@ -7,12 +7,14 @@
   <link rel="preconnect" href="https://unpkg.com">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
   <link rel="stylesheet" href="styles.0f70c6654a3e.css" />
-  <link rel="stylesheet" href="support-v72.8b4135ea58b8.css" />
+  <link rel="stylesheet" href="support-v72.a9bc94e95513.css" />
   <link rel="stylesheet" href="support-layout-v74.b9e4ae178c02.css" />
 <link rel="stylesheet" href="support-buttons-v77.bda78ffa4330.css">
-<!-- PA75-BEGIN -->
-<meta name="pa-version" content="V-77">
-<script id="pa-release-config" type="application/json">{"release":"V-77-6857cf3d8911","version":"V-77","page":"index"}</script>
+<link rel="stylesheet" href="welcome-v90.4f69d749ab7f.css">
+<link rel="stylesheet" href="support-executive-v91.7dafd25f0527.css">
+<link rel="stylesheet" href="theme-v94.027c57992278.css"><!-- PA75-BEGIN -->
+<meta name="pa-version" content="V-94">
+<script id="pa-release-config" type="application/json">{"release":"V-94-fbc4b8134d44","version":"V-94","page":"index"}</script>
 <script>/* Primavera Analyzer: comprobación de publicación, siempre relativa al repositorio abierto. */
 (()=>{'use strict';
  const config=JSON.parse(document.getElementById('pa-release-config').textContent);
@@ -55,27 +57,26 @@
 })();
 </script>
 <!-- PA75-END --></head>
-<body class="welcome-locked">\n  <!-- V1.19: bienvenida visual; independiente del motor de análisis -->
-  <div id="welcomeScreen" class="welcome-screen" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
-    <div class="welcome-glow welcome-glow-a" aria-hidden="true"></div>
-    <div class="welcome-glow welcome-glow-b" aria-hidden="true"></div>
-    <div class="welcome-particles" aria-hidden="true"></div>
-    <section class="welcome-card">
-      <img class="welcome-logo" src="logo_totalplay_referencia.42c12dc37b1a.png" alt="Totalplay">
-      <div class="welcome-texts"><h2 id="welcomeTitle">Bienvenidos</h2><h3>Herramienta de análisis operativo</h3><p>Distrito GDL La Primavera</p></div>
-    </section>
-    <nav class="welcome-links" aria-label="Seleccionar herramienta">
-      <button id="welcomeSupport" class="welcome-enter" type="button">Soporte</button>
-      <button id="welcomeRepeat" class="welcome-enter" type="button">Repeat</button>
-      <button id="welcomePlant" class="welcome-enter" type="button">Planta Externa</button>
-    </nav>
-  </div>
+<body class="welcome-locked">  <!-- V1.19: bienvenida visual; independiente del motor de análisis -->
+<div id="welcomeScreen" class="welcome-screen" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
+<div class="wv90-header"><span>Distrito GDL<br>La Primavera</span></div>
+<div class="wv90-content"><h2 id="welcomeTitle">Centro de análisis operativo</h2>
+<p class="wv90-subtitle">Selecciona una herramienta para comenzar</p>
+<nav class="wv90-tools" aria-label="Seleccionar herramienta"><button id="welcomeSupport" class="wv90-tool" type="button" aria-label="Abrir Soportes en una pestaña nueva">
+<span class="wv90-icon" aria-hidden="true"><svg viewBox="0 0 180 135" fill="none" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"><path stroke="#101d46" d="M42 72V60a48 48 0 0 1 96 0v29c0 25-15 34-35 34H90"/><path stroke="#ff620d" d="M43 55h-7c-10 0-14 7-14 16v17c0 9 7 14 21 14zm94 0h7c10 0 14 7 14 16v17c0 9-7 14-21 14z"/><rect stroke="#101d46" x="77" y="115" width="23" height="12" rx="6"/></svg></span>
+<span class="wv90-name">Soportes</span><span class="wv90-description">Soportes y reincidencias</span>
+<span class="wv90-action" aria-hidden="true">Abrir módulo <span>→</span></span></button><button id="welcomeRepeat" class="wv90-tool" type="button" aria-label="Abrir Repeat 60 en una pestaña nueva">
+<span class="wv90-icon" aria-hidden="true"><svg viewBox="0 0 180 135" fill="none" stroke-width="8" stroke-linejoin="round"><path stroke="#101d46" d="M30 123V79h29v44zm84 0V16h29v107z"/><path stroke="#ff620d" d="M72 123V48h29v75z"/></svg></span>
+<span class="wv90-name">Repeat 60</span><span class="wv90-description">Análisis de recurrencia</span>
+<span class="wv90-action" aria-hidden="true">Abrir módulo <span>→</span></span></button><button id="welcomePlant" class="wv90-tool" type="button" aria-label="Abrir Planta Externa en una pestaña nueva">
+<span class="wv90-icon" aria-hidden="true"><svg viewBox="0 0 280 140" fill="none" stroke-width="3" stroke-linecap="round"><path d="M12 5 Q77 105 171 12" stroke="#142c4b"/><circle cx="179" cy="12" r="5" fill="#FFFAF6" stroke="#142c4b"/><path d="M12 7 Q77 108 206 6" stroke="#e76b25"/><circle cx="214" cy="6" r="5" fill="#FFFAF6" stroke="#e76b25"/><path d="M12 9 Q77 111 236 25" stroke="#ff8b35"/><circle cx="244" cy="25" r="5" fill="#FFFAF6" stroke="#ff8b35"/><path d="M12 11 Q77 114 197 36" stroke="#be7145"/><circle cx="205" cy="36" r="5" fill="#FFFAF6" stroke="#be7145"/><path d="M12 13 Q77 117 224 47" stroke="#142c4b"/><circle cx="232" cy="47" r="5" fill="#FFFAF6" stroke="#142c4b"/><path d="M12 15 Q77 120 253 55" stroke="#e76b25"/><circle cx="261" cy="55" r="5" fill="#FFFAF6" stroke="#e76b25"/><path d="M12 17 Q77 123 198 66" stroke="#ff8b35"/><circle cx="206" cy="66" r="5" fill="#FFFAF6" stroke="#ff8b35"/><path d="M12 19 Q77 126 230 78" stroke="#be7145"/><circle cx="238" cy="78" r="5" fill="#FFFAF6" stroke="#be7145"/><path d="M12 21 Q77 129 251 91" stroke="#142c4b"/><circle cx="259" cy="91" r="5" fill="#FFFAF6" stroke="#142c4b"/><path d="M12 23 Q77 132 206 101" stroke="#e76b25"/><circle cx="214" cy="101" r="5" fill="#FFFAF6" stroke="#e76b25"/><path d="M12 25 Q77 135 228 115" stroke="#ff8b35"/><circle cx="236" cy="115" r="5" fill="#FFFAF6" stroke="#ff8b35"/><path d="M12 27 Q77 138 198 128" stroke="#be7145"/><circle cx="206" cy="128" r="5" fill="#FFFAF6" stroke="#be7145"/></svg></span>
+<span class="wv90-name">Planta Externa</span><span class="wv90-description">Cortes masivos y cobertura</span>
+<span class="wv90-action" aria-hidden="true">Abrir módulo <span>→</span></span></button></nav></div></div>
 
+<div id="supportModule">
   <header class="topbar supports-v71-header">
-    <div>
-      <h1>Soportes y Reincidencias</h1>
-      <p>Distrito GDL La Primavera · cuadrícula fija 300 × 300 m · V1.17</p>
-    </div>
+    <div class="sc91-heading"><svg class="sc91-logo" viewBox="0 0 56 66" aria-hidden="true"><path fill="#ff690b" d="M28 1 54 16v28L28 59V43l13-8V24L28 17 15 24 2 17z"/><path fill="#f25805" d="m2 24 13 8v32L2 56z"/><path fill="#ff7b20" d="m17 27 11-6 10 6-11 6z"/></svg><div><h1>Soporte y Reincidencias</h1><p>Análisis de soporte y reincidencias</p></div></div>
+    <div class="sc91-district">Distrito GDL<br>La Primavera</div>
     <div class="filebox">
       
       
@@ -89,7 +90,7 @@
     </div>
   </header>
 
-<div id="sc71-dateDropdown" class="sc71-calendar hidden" role="dialog" aria-label="Calendario de rango de fechas"><div class="calendar-heading"><button id="sc71-prevMonth" type="button" aria-label="Anterior">‹</button><button id="sc71-calendarTitle" type="button" class="calendar-title" title="Cambiar nivel de calendario"></button><button id="sc71-nextMonth" type="button" aria-label="Siguiente">›</button></div><div id="sc71-calendarWeekdays" class="calendar-weekdays"><span>Lu</span><span>Ma</span><span>Mi</span><span>Ju</span><span>Vi</span><span>Sá</span><span>Do</span></div><div id="sc71-calendarDays" class="calendar-days"></div><div class="calendar-actions"><button id="sc71-fullWeek" type="button">Semana completa</button><button id="sc71-fullMonth" type="button">Mes completo</button><button id="sc71-clearDates" type="button">Clear</button><button id="sc71-applyDates" type="button" class="orange">OK</button></div><small id="sc71-draftDatesLabel">Todas las fechas</small></div>
+<div id="sc71-dateDropdown" class="sc71-calendar hidden" role="dialog" aria-label="Calendario de rango de fechas"><div id="sc88-calendarDrag" title="Arrastrar para mover el calendario"><span>Calendario</span><span aria-hidden="true">⠿</span></div><div class="calendar-heading"><button id="sc71-prevMonth" type="button" aria-label="Anterior">‹</button><button id="sc71-calendarTitle" type="button" class="calendar-title" title="Cambiar nivel de calendario"></button><button id="sc71-nextMonth" type="button" aria-label="Siguiente">›</button></div><div id="sc71-calendarWeekdays" class="calendar-weekdays"><span title="Seleccionar semana">✓</span><span>Lu</span><span>Ma</span><span>Mi</span><span>Ju</span><span>Vi</span><span>Sá</span><span>Do</span></div><div id="sc71-calendarDays" class="calendar-days"></div><div class="calendar-actions"><button id="sc71-fullWeek" type="button">Semana completa</button><button id="sc71-fullMonth" type="button">Mes completo</button><button id="sc71-clearDates" type="button">Clear</button><button id="sc71-applyDates" type="button" class="orange">OK</button></div><small id="sc71-draftDatesLabel">Todas las fechas</small></div>
   <dialog id="sc72-deleteDialog" class="sc72-delete-dialog" aria-labelledby="sc72-deleteTitle">
     <div class="sc72-dialog-head"><h2 id="sc72-deleteTitle">Eliminar semanas cargadas</h2><button id="sc72-deleteClose" class="btn" type="button" aria-label="Cerrar">✕</button></div>
     <p>Selecciona semanas completas. El borrado incluye todos sus soportes, independientemente de los filtros del mapa.</p>
@@ -100,7 +101,26 @@
   </dialog>
   <section id="status" class="status info">Carga el reporte Excel. El nombre del archivo puede cambiar; la estructura interna debe conservarse.</section>
 
-<div class="sc74-toolbar">  <section class="search-panel panel supports-v71-search"><label for="mapSearch"><strong>Localizar cuenta o cuadrante</strong></label><div class="search-actions"><input id="mapSearch" type="search" placeholder="Cuenta (10 dígitos) o Q_-38380-7835" autocomplete="off"><button id="searchGo" class="btn primary" type="button">Buscar</button><button id="searchNext" class="btn" type="button" hidden>Siguiente ubicación</button><button id="searchClear" class="btn" type="button">Limpiar</button></div><div id="searchResult" class="search-result" role="status" aria-live="polite">La búsqueda respeta los filtros activos.</div></section><div class="sc77-date-actions" aria-label="Fechas e histórico"><button id="sc71-dateToggle" class="btn" type="button" aria-expanded="false" aria-controls="sc71-dateDropdown">Calendario</button><button id="deleteWeeks" class="btn danger" type="button">Eliminar semanas</button></div><nav class="controls sc74-controls" aria-label="Controles de Soportes"><details class="sc74-menu"><summary>Visualización</summary><div class="sc74-menu-content"><h2>Visualización</h2>
+  <main>
+    <section class="kpis">
+      <article><i class="sc91-kpi-icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 26v-5a16 16 0 0 1 32 0v14c0 7-5 10-13 10"/><rect x="4" y="22" width="8" height="15" rx="3"/><rect x="36" y="22" width="8" height="15" rx="3"/><path d="M21 44h7"/></svg></i><span>Eventos seleccionados</span><strong id="kEvents">0</strong></article>
+      <article><i class="sc91-kpi-icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="24" cy="14" r="8"/><path d="M10 41v-7c0-12 28-12 28 0v7zM11 10a7 7 0 0 0 0 14M37 10a7 7 0 0 1 0 14M4 37v-6c0-4 3-6 6-6M44 37v-6c0-4-3-6-6-6"/></svg></i><span>Cuentas únicas</span><strong id="kAccounts">0</strong></article>
+      <article><i class="sc91-kpi-icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M41 20A17 17 0 0 0 10 12M7 5v9h9M7 28a17 17 0 0 0 31 8M41 43v-9h-9"/></svg></i><span>Clientes reincidentes</span><strong id="kRepeat">0</strong></article>
+      <article><i class="sc91-kpi-icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 5h14v14H5zM29 5h14v14H29zM5 29h14v14H5zM29 29h14v14H29z"/></svg></i><span>Cuadrantes con soportes</span><strong id="kCells">0</strong></article>
+      <article id="cleanupKpi" class="cleanup-kpi" role="button" tabindex="0" aria-expanded="false" aria-controls="cleanupPanel"><i class="sc91-kpi-icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 3 5 13 13 5-13 5-5 13-5-13-13-5 13-5zM39 29l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/></svg></i><span>Clean Up</span><strong id="kImports">0</strong></article>
+    </section>
+<div class="sc74-toolbar">  <section class="search-panel panel supports-v71-search"><label for="mapSearch"><strong>Localizar cuenta, OS o coordenadas</strong></label><div class="search-actions"><input id="mapSearch" type="search" placeholder="Cuenta, OS, cuadrante o latitud, longitud" autocomplete="off"><button id="searchGo" class="btn primary" type="button">Buscar</button><button id="searchNext" class="btn" type="button" hidden>Siguiente ubicación</button><button id="searchClear" class="btn" type="button">Limpiar</button></div><div id="searchResult" class="search-result" role="status" aria-live="polite">La búsqueda respeta los filtros activos.</div></section><div class="sc77-date-actions" aria-label="Fechas e histórico"><button id="sc71-dateToggle" class="btn" type="button" aria-expanded="false" aria-controls="sc71-dateDropdown">Calendario</button><button id="deleteWeeks" class="btn danger" type="button">Eliminar semanas</button></div><nav class="controls sc74-controls" aria-label="Controles de Soportes"><details class="sc74-menu"><summary>Clúster / estatus</summary><div class="sc74-menu-content"><h3>Filtros</h3>
+        <div class="filter-title">Cluster</div>
+        <div class="row-actions">
+          <button id="clustersAll" class="mini">Todos</button>
+          <button id="clustersNone" class="mini">Ninguno</button>
+        </div>
+        <div id="clusters" class="multi-list"><span class="muted">Sin datos</span></div>
+        <label>Estatus
+          <select id="statusFilter"><option value="">Todos</option></select>
+        </label>
+
+        </div></details><details class="sc74-menu"><summary>Visualización</summary><div class="sc74-menu-content"><h2>Visualización</h2>
         <div class="segmented" id="viewMode">
           <button data-mode="supports" class="active">Soportes</button>
           <button data-mode="repeat">Reincidencias</button>
@@ -124,31 +144,13 @@
         <!-- Controles internos conservados para compatibilidad; fechas seleccionadas desde Calendario. -->
         <div hidden aria-hidden="true"><button id="yearsAll"></button><button id="yearsNone"></button><div id="years"></div><button id="weeksAll"></button><button id="weeksNone"></button><div id="weeks"></div></div>
 
-        </div></details><details class="sc74-menu"><summary>Clúster / estatus</summary><div class="sc74-menu-content"><h3>Filtros</h3>
-        <div class="filter-title">Cluster</div>
-        <div class="row-actions">
-          <button id="clustersAll" class="mini">Todos</button>
-          <button id="clustersNone" class="mini">Ninguno</button>
-        </div>
-        <div id="clusters" class="multi-list"><span class="muted">Sin datos</span></div>
-        <label>Estatus
-          <select id="statusFilter"><option value="">Todos</option></select>
-        </label>
-
         </div></details><details class="sc74-menu"><summary>Bases / histórico</summary><div class="sc74-menu-content"><h3>Archivo / histórico</h3>
         <div id="importInfo" class="small muted">Todavía no hay archivos cargados.</div>
         <h3>Base de red</h3>
         <div id="networkInfo" class="small muted">No hay base de red cargada.</div>
         <button id="clearNetwork" class="mini network-clear" type="button">Eliminar base local</button>
       </div></details></nav></div>
-  <main>
-    <section class="kpis">
-      <article><span>Eventos seleccionados</span><strong id="kEvents">0</strong></article>
-      <article><span>Cuentas únicas</span><strong id="kAccounts">0</strong></article>
-      <article><span>Clientes reincidentes</span><strong id="kRepeat">0</strong></article>
-      <article><span>Cuadrantes con soportes</span><strong id="kCells">0</strong></article>
-      <article id="cleanupKpi" class="cleanup-kpi" role="button" tabindex="0" aria-expanded="false" aria-controls="cleanupPanel"><span>Clean Up</span><strong id="kImports">0</strong></article>
-    </section>
+
 
     <section id="cleanupPanel" class="panel cleanup-panel" hidden aria-label="Administrar polígonos Clean Up">
       <div class="cleanup-head"><h2>Polígonos Clean Up</h2><button id="cleanupClose" class="mini" type="button">Cerrar</button></div>
@@ -278,13 +280,14 @@
     </section>
   </div>
   <!-- V-43: cargar la lógica después de crear todos los elementos del modal de borrado. -->
-  <script type="application/x-pa-pending" data-pa-pending="" data-pa-src="app.35766772d5c0.js" data-pa-original-src="app.js"></script>
+  <script type="application/x-pa-pending" data-pa-pending="" data-pa-src="app.c31f7904022a.js" data-pa-original-src="app.js"></script>
   <script type="application/x-pa-pending" data-pa-pending="" data-pa-src="support-layout-v74.e9a867baec27.js" data-pa-original-src="support-layout-v74.js"></script>
-  <script type="application/x-pa-pending" data-pa-pending="" data-pa-src="support-calendar-v73.48d66cddfad9.js" data-pa-original-src="support-calendar-v73.js"></script>
+  <script type="application/x-pa-pending" data-pa-pending="" data-pa-src="support-calendar-v73.33a8f88fa186.js" data-pa-original-src="support-calendar-v73.js"></script>
   <link rel="stylesheet" href="pon-v47.4510ca1f4ad8.css">
   <script type="application/x-pa-pending" data-pa-pending="" data-pa-src="pon-v47.7789604d8d6a.js" data-pa-original-src="pon-v47.js"></script>
   <script type="application/x-pa-pending" data-pa-pending="" data-pa-src="bienvenida.9bd70e99883e.js" data-pa-original-src="bienvenida.js"></script>
   <script type="application/x-pa-pending" data-pa-pending="" data-pa-src="cleanup.5fe4a93d6ac4.js" data-pa-original-src="cleanup.js"></script>
   <script type="application/x-pa-pending" data-pa-pending="" data-pa-src="support-start-v76.34df1c0ea415.js" data-pa-original-src="support-start-v76.js"></script>
-</body>
+</div>
+<script type="application/x-pa-pending" data-pa-pending="" data-pa-src="theme-templates-v94.b4f4fb3d1541.js" data-pa-original-src="theme-templates-v94.js"></script><script type="application/x-pa-pending" data-pa-pending="" data-pa-src="theme-v94.f75349b5a0fb.js" data-pa-original-src="theme-v94.js"></script></body>
 </html>

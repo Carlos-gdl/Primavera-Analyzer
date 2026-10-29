@@ -1,0 +1,33 @@
+{
+  "version": "V-82",
+  "status": "para pruebas; pendiente de aprobación",
+  "scope": "Repeat 60",
+  "protected_identical": [
+    "app.js",
+    "bienvenida.js",
+    "cleanup.js",
+    "coverage-v53.js",
+    "masivos.js",
+    "masivos.css",
+    "pon-v47.js",
+    "pon-v47.css",
+    "styles.css",
+    "support-buttons-v77.css",
+    "support-calendar-v73.js",
+    "support-layout-v74.js",
+    "support-layout-v74.css",
+    "support-start-v76.js",
+    "support-v72.css",
+    "repeat60.css"
+  ],
+  "tests": "PASS: días acumulables, semanas ISO/cruces, mezcla de colores, sectores, meses, navegación, reapertura, Clear, apagado, búsquedas y coordenadas; DOM/Leaflet simulados",
+  "limitations": [
+    "Sin validación visual de navegador",
+    "Sin bases reales de gerentes"
+  ],
+  "sha256": {
+    "repeat60.js": "47fb6a122c6be53f713fea78f61165407482b05e2aaa89193127eba0ddd0fd8f",
+    "repeat-tools-v78.js": "5dc4348cc745b646ceb11e4086b362d17fd691a82ff9460d11221b40d0ec46b0",
+    "repeat-tools-v78.css": "9ddb0db0d0a09a3282961013b9eec54ded27e123eb3197d3a4cb80620058634f"
+  }
+}

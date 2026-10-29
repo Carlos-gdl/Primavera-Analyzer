@@ -1,0 +1,33 @@
+{
+  "version": "V-85",
+  "scope": "Ficha del marcador, Planta Externa",
+  "status": "pendiente prueba real y aprobación",
+  "protected_identical": [
+    "app.js",
+    "bienvenida.js",
+    "repeat60.js",
+    "repeat60.css",
+    "repeat-tools-v78.js",
+    "repeat-tools-v78.css",
+    "support-calendar-v73.js",
+    "support-start-v76.js",
+    "support-layout-v74.js",
+    "support-layout-v74.css",
+    "support-buttons-v77.css",
+    "support-v72.css",
+    "cleanup.js",
+    "coverage-v53.js",
+    "pon-v47.js",
+    "pon-v47.css",
+    "styles.css"
+  ],
+  "test_result": "PASS: sintaxis, DOM/Leaflet simulados y regresión V84",
+  "limitations": [
+    "Sin validación visual de navegador",
+    "X real de Leaflet no ejercitada; closeButton habilitado"
+  ],
+  "sha256": {
+    "masivos.js": "2baa7ab8dabf3fd778c89a2ab54dfdc33fec9202f74c4310a806010a1e1bad6a",
+    "masivos.css": "78693746beb06e1833189576175809f81234a74990d2a692eb268c73bd8e43eb"
+  }
+}

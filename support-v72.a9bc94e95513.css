@@ -1,0 +1,45 @@
+/* V-71: estilos exclusivos del módulo de Soportes. */
+.supports-v71-header .filebox{margin-left:auto;justify-content:flex-end;align-items:center;max-width:100%;align-self:center}
+.supports-v71-header .filebox .btn{flex:0 0 auto;white-space:nowrap}
+.supports-v71-search{box-sizing:border-box;width:100%;max-width:680px;margin:0 auto 0 0;padding:5px 12px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 9px}
+.supports-v71-search>label{display:block;font-size:10px}
+.supports-v71-search .search-actions{min-width:0;gap:5px;flex-wrap:wrap}
+.supports-v71-search .search-actions input{width:0;min-width:100px;flex:1;padding:6px 8px}
+.supports-v71-search .search-actions .btn{flex:0 0 auto;white-space:nowrap;padding:6px 8px;font-size:10px}
+.supports-v71-search .search-result{display:block;grid-column:1/-1;max-width:none;white-space:normal;overflow-wrap:anywhere;font-size:10px;margin:0}
+.sc71-calendar{position:fixed;top:68px;right:14px;z-index:2200;box-sizing:border-box;width:330px;max-width:calc(100vw - 20px);max-height:calc(100vh - 85px);overflow:auto;padding:13px;border:1px solid #3d6682;border-radius:12px;background:#102e44;color:#e7f3fc;box-shadow:0 16px 48px #0008;font:12px Arial,sans-serif}
+.sc71-calendar.hidden,.sc71-calendar .hidden{display:none}
+.sc71-calendar button{border:1px solid #355b75;border-radius:6px;background:#173e5a;color:#eff7ff;padding:7px;cursor:pointer;font:inherit}
+.sc71-calendar button:hover{background:#285e83}
+.sc71-calendar button:focus-visible{outline:2px solid #ffac58;outline-offset:2px}
+.sc71-calendar button:disabled{opacity:.4;cursor:default}
+.sc71-calendar .calendar-heading{display:grid;grid-template-columns:30px 1fr 30px;gap:6px;margin-bottom:10px}
+.sc71-calendar .calendar-title{font-weight:700}
+.sc71-calendar .calendar-weekdays,.sc71-calendar .calendar-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;text-align:center}
+.sc71-calendar .calendar-weekdays{margin-bottom:6px;color:#a4c5dc;font-size:11px}
+.sc71-calendar .calendar-days.calendar-tiles{grid-template-columns:repeat(3,minmax(0,1fr))}
+.sc71-calendar button.chosen{background:#126aca;border-color:#65aafa;color:#fff}
+.sc71-calendar .calendar-empty{grid-column:1/-1;padding:14px}
+.sc71-calendar .calendar-actions{display:flex;flex-wrap:wrap;gap:5px;margin:12px 0 8px}
+.sc71-calendar .calendar-actions button{font-size:11px;flex:1 0 auto}
+.sc71-calendar .calendar-actions .orange{background:#e87824;border-color:#ffac58;color:#fff;font-weight:700}
+.sc71-calendar small{display:block;line-height:1.5;color:#bbd4e5}
+.sc71-period-legend{position:absolute;z-index:600;left:12px;bottom:76px;display:flex;flex-wrap:wrap;gap:6px 12px;box-sizing:border-box;max-width:calc(100% - 24px);max-height:100px;overflow:auto;padding:7px 9px;border:1px solid #45647c;border-radius:7px;background:#102a40ed;color:#fff;font:11px Arial,sans-serif;box-shadow:0 2px 8px #0003}
+.sc71-period-legend[hidden]{display:none}
+.sc71-period-legend span{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.sc71-period-legend i{width:10px;height:10px;border-radius:3px;border:1px solid #ffffff70}
+.sc71-event-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;border:1px solid #0003}
+@media(max-width:760px){.supports-v71-header .filebox{gap:4px}.supports-v71-search{grid-template-columns:1fr}.supports-v71-search>label{display:none}.sc71-calendar{top:90px;max-height:calc(100vh - 105px)}}
+
+/* V-72: disponibilidad real y ventana de borrado exclusivo de soportes. */
+.sc71-calendar button:disabled{opacity:.24;cursor:not-allowed;background:#102738;color:#89a0af}
+.sc72-delete-dialog{width:480px;max-width:calc(100vw - 30px);max-height:80vh;box-sizing:border-box;overflow:auto;border:1px solid #456e88;border-radius:12px;padding:18px;background:#102e44;color:#e8f5ff;font:13px Arial,sans-serif;box-shadow:0 20px 70px #0009}
+.sc72-delete-dialog::backdrop{background:#0008}
+.sc72-dialog-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.sc72-dialog-head h2{font-size:17px;margin:0}
+.sc72-delete-dialog p{line-height:1.5;color:#c6dce9}.sc72-delete-list{margin-top:12px;max-height:40vh;overflow:auto;display:grid;gap:6px}.sc72-delete-list label{display:flex;gap:10px;align-items:center;padding:10px;border:1px solid #315874;border-radius:7px;background:#173d59;cursor:pointer}.sc72-delete-list small{display:block;margin-top:4px;color:#aac8db}.sc72-delete-dialog button:disabled{opacity:.4;cursor:default}
+
+/* V-88: únicamente casillas y movimiento del calendario de Soportes. */
+#sc71-dateDropdown .calendar-weekdays,#sc71-dateDropdown .calendar-days:not(.calendar-tiles){grid-template-columns:22px repeat(7,minmax(0,1fr))}
+#sc71-dateDropdown .sc88-week-check{display:flex;align-items:center;justify-content:center;margin:0;padding:0;cursor:pointer}
+#sc71-dateDropdown .sc88-week-check input{width:15px;height:15px;margin:0;accent-color:#65aafa;cursor:pointer}#sc71-dateDropdown .sc88-week-check input:disabled{opacity:.25;cursor:not-allowed}
+#sc88-calendarDrag{display:flex;justify-content:space-between;align-items:center;min-height:26px;margin:-4px 0 8px;color:#bbd4e5;font-size:11px;font-weight:700;cursor:grab;touch-action:none;user-select:none;border-bottom:1px solid #355b75;padding-bottom:5px}#sc88-calendarDrag.dragging{cursor:grabbing}

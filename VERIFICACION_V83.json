@@ -1,0 +1,35 @@
+{
+  "version": "V-83",
+  "base": "V-82 aprobada",
+  "status": "pendiente prueba real y aprobación",
+  "scope": "Soportes",
+  "protected_identical": [
+    "repeat60.js",
+    "repeat60.css",
+    "repeat-tools-v78.js",
+    "repeat-tools-v78.css",
+    "bienvenida.js",
+    "masivos.js",
+    "masivos.css",
+    "coverage-v53.js",
+    "pon-v47.js",
+    "pon-v47.css",
+    "cleanup.js",
+    "styles.css",
+    "support-layout-v74.js",
+    "support-layout-v74.css",
+    "support-v72.css",
+    "support-start-v76.js",
+    "support-buttons-v77.css"
+  ],
+  "test_result": "PASS — pruebas_logica_V83.js con DOM/Leaflet simulados",
+  "limitations": [
+    "Sin validación visual de navegador",
+    "Sin pruebas de red de mapas ni bases reales"
+  ],
+  "sha256": {
+    "app.js": "c31f7904022a4544ad38720761705590526ff829050f6e05f191a6f9c71c64d6",
+    "support-calendar-v73.js": "87c5b0c23966535da91f21035d7c5e954c2bd0ce4be3422f18ba6cd5c8c37d6e",
+    "index.html": "afc577a22833a10fcead626cb068f019eecf80f43519cd8b3d65559e334755ce"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "version": "V-88",
+  "status": "pendiente prueba real y aprobación",
+  "scope": "Calendario de Soportes",
+  "protected_identical": [
+    "app.js",
+    "pon-v47.css",
+    "repeat-tools-v78.js",
+    "bienvenida.js",
+    "support-start-v76.js",
+    "pon-v47.js",
+    "coverage-v53.js",
+    "repeat60.js",
+    "styles.css",
+    "support-buttons-v77.css",
+    "support-layout-v74.css",
+    "masivos.css",
+    "repeat60.css",
+    "support-layout-v74.js",
+    "repeat-tools-v78.css",
+    "cleanup.js",
+    "masivos.js"
+  ],
+  "checks": [
+    "Sintaxis JS",
+    "Pruebas DOM/Leaflet simulados",
+    "Casillas semanales y límites de movimiento",
+    "Coloración y gestión de borrado existentes idénticas",
+    "Referencias de publicación"
+  ],
+  "limitations": [
+    "Sin validación visual o arrastre real en navegador"
+  ],
+  "sha256": {
+    "support-calendar-v73.js": "33a8f88fa186445b03f73bd0b0f640454786ae89f3f9a3b15788eeff9452855b",
+    "support-v72.css": "a9bc94e9551355ae13fc0d61753e2df20f621bcb90d029363a8281a5398d0644"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "version": "V-84",
+  "base": "V-83 aprobada",
+  "scope": "Planta Externa",
+  "status": "para pruebas; pendiente aprobación",
+  "protected_identical": [
+    "app.js",
+    "bienvenida.js",
+    "repeat60.js",
+    "repeat60.css",
+    "repeat-tools-v78.js",
+    "repeat-tools-v78.css",
+    "support-calendar-v73.js",
+    "support-start-v76.js",
+    "support-layout-v74.js",
+    "support-layout-v74.css",
+    "support-buttons-v77.css",
+    "support-v72.css",
+    "cleanup.js",
+    "coverage-v53.js",
+    "pon-v47.js",
+    "pon-v47.css",
+    "styles.css"
+  ],
+  "tests": "PASS — pruebas_logica_V84.js, DOM/Leaflet simulados, sintaxis y fuentes protegidas",
+  "limitations": [
+    "Sin validación visual ni bases reales",
+    "Street View depende de disponibilidad de imágenes",
+    "QR solo disponible en registros que lo conserven; no cambia omisión de folios duplicados"
+  ],
+  "sha256": {
+    "masivos.js": "79a3360afad67aa8b047f746fc12978dbd8b18e41d162c5e9ba9c83e923bedc5",
+    "masivos.html": "5cd858445b42543fe1e265e6ee6f289e06925a436855a65589bbdc69175c28b0",
+    "masivos.css": "24556a77edf30121b925f522bb23a098817f80f16c2540ace4c57ed2d7bf16dd"
+  }
+}

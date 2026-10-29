@@ -37,3 +37,9 @@
 .sc72-delete-dialog::backdrop{background:#0008}
 .sc72-dialog-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.sc72-dialog-head h2{font-size:17px;margin:0}
 .sc72-delete-dialog p{line-height:1.5;color:#c6dce9}.sc72-delete-list{margin-top:12px;max-height:40vh;overflow:auto;display:grid;gap:6px}.sc72-delete-list label{display:flex;gap:10px;align-items:center;padding:10px;border:1px solid #315874;border-radius:7px;background:#173d59;cursor:pointer}.sc72-delete-list small{display:block;margin-top:4px;color:#aac8db}.sc72-delete-dialog button:disabled{opacity:.4;cursor:default}
+
+/* V-88: únicamente casillas y movimiento del calendario de Soportes. */
+#sc71-dateDropdown .calendar-weekdays,#sc71-dateDropdown .calendar-days:not(.calendar-tiles){grid-template-columns:22px repeat(7,minmax(0,1fr))}
+#sc71-dateDropdown .sc88-week-check{display:flex;align-items:center;justify-content:center;margin:0;padding:0;cursor:pointer}
+#sc71-dateDropdown .sc88-week-check input{width:15px;height:15px;margin:0;accent-color:#65aafa;cursor:pointer}#sc71-dateDropdown .sc88-week-check input:disabled{opacity:.25;cursor:not-allowed}
+#sc88-calendarDrag{display:flex;justify-content:space-between;align-items:center;min-height:26px;margin:-4px 0 8px;color:#bbd4e5;font-size:11px;font-weight:700;cursor:grab;touch-action:none;user-select:none;border-bottom:1px solid #355b75;padding-bottom:5px}#sc88-calendarDrag.dragging{cursor:grabbing}

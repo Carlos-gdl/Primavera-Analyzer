@@ -3,7 +3,7 @@ const REQUIRED=['Cuenta','Ticket','OS','OT','Tipo','Subtipo','Distrito','Cluster
 const DB='primavera_soportes_v12', STORE='events', IMPORTS='imports', NETWORK='network', META='network_meta', CELL=300;
 const NETWORK_REQUIRED=['Cuenta','OLT','Frame','Slot','Port'];
 let searchMarker=null, searchOutline=null, searchAccount='', searchLocations=[];
-let initialMapFitDone=false; // V1.13.1: conservar zoom del usuario
+let initialMapFitDone=true; // V1.13.1: conservar zoom del usuario
 let pointsEnabled=false, pointsMode='both', pointsScope='visible', pointLayers=null;
 let db, allEvents=[], imports=[], networkIndex=new Map(), networkMeta=null, selectedYears=new Set(), selectedWeekNums=new Set(), selectedClusters=new Set(), viewMode='supports', layers=[], selectedCell=null, quadrantVisibility='all', manualVisibleIds=new Set();
 const $=id=>document.getElementById(id);
@@ -143,10 +143,10 @@ function renderImportInfo(){if(!imports.length){$('importInfo').textContent='Tod
 function filtered(){const st=$('statusFilter').value;return allEvents.filter(x=>{const p=weekParts(x.week);return selectedClusters.has(x.cluster)&&(!st||x.estatus===st)&&(window.supportCalendarV71?.includes(x)??true)})}
 function analyze(events){const acc=new Map();events.forEach(e=>{if(!e.cuenta)return;let a=acc.get(e.cuenta);if(!a)acc.set(e.cuenta,a={cuenta:e.cuenta,events:[]});a.events.push(e)});const repeat=[...acc.values()].filter(a=>a.events.length>=2);const repeatLoc=new Map();repeat.forEach(a=>{const by=new Map();a.events.forEach(e=>{let z=by.get(e.cell);if(!z)by.set(e.cell,z={cell:e.cell,ix:e.ix,iy:e.iy,n:0,last:'',cluster:new Map()});z.n++;if(e.date>z.last)z.last=e.date;z.cluster.set(e.cluster,(z.cluster.get(e.cluster)||0)+1)});const best=[...by.values()].sort((p,q)=>q.n-p.n||q.last.localeCompare(p.last))[0];repeatLoc.set(a.cuenta,best)});
  const cells=new Map();events.forEach(e=>{let c=cells.get(e.cell);if(!c)cells.set(e.cell,c={id:e.cell,ix:e.ix,iy:e.iy,supports:0,repeats:0,clusters:new Map(),events:[],accounts:[]});c.supports++;c.events.push(e);c.clusters.set(e.cluster,(c.clusters.get(e.cluster)||0)+1)});repeat.forEach(a=>{const loc=repeatLoc.get(a.cuenta);if(!loc)return;let c=cells.get(loc.cell);if(!c)cells.set(loc.cell,c={id:loc.cell,ix:loc.ix,iy:loc.iy,supports:0,repeats:0,clusters:new Map(),events:[],accounts:[]});c.repeats++;c.accounts.push(a)});for(const c of cells.values())c._recurrentAccounts=new Set(c.accounts.map(x=>x.cuenta));for(const c of cells.values())c.cluster=[...c.clusters.entries()].sort((a,b)=>b[1]-a[1])[0]?.[0]||'SIN CLUSTER';return {accounts:acc,repeat,cells:[...cells.values()]}}
-const map=L.map('map',{preferCanvas:false}).setView([20.65,-103.44],12);
+const map=L.map('map',{preferCanvas:false}).setView([20.6736,-103.3440],12);
 // Mapas base: calles y satélite. Las capas analíticas permanecen iguales al cambiar el fondo.
-const streetBase=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Tiles © Esri'}).addTo(map);
-const satelliteBase=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Imagery © Esri'});
+const streetBase=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Tiles © Esri'});
+const satelliteBase=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Imagery © Esri'}).addTo(map);
 L.control.layers({'Mapa / Calles':streetBase,'Satélite':satelliteBase},null,{position:'topleft',collapsed:false}).addTo(map);
 const mapWrap=document.querySelector('.mapwrap');
 const fsBtn=$('mapFullscreen');
@@ -275,11 +275,19 @@ function updateSearchOverlay(a){
  if(c){searchOutline=L.rectangle(boundsFor(c),{color:'#ffd84d',weight:4,fillColor:'#ffdc52',fillOpacity:.22,interactive:false}).addTo(map);searchOutline.bringToFront()}
  if(searchAccount&&c){const events=c.events.filter(e=>e.cuenta===searchAccount);if(events.length){const e=events.slice().sort((x,y)=>y.date.localeCompare(x.date))[0];searchMarker=L.marker([e.lat,e.lon],{title:'Cuenta '+searchAccount}).addTo(map);searchMarker.bindTooltip('Cuenta '+esc(searchAccount))}}
 }
-function doMapSearch(){const q=$('mapSearch').value.trim(),a=analyze(filtered()),info=$('searchResult');if(!q){info.textContent='Escribe una cuenta o cuadrante.';return}
- let matches=[];if(/^Q-?-?\d+-?-?\d+$/i.test(q)||q.toUpperCase().startsWith('Q')){matches=a.cells.filter(c=>c.id.toUpperCase()===q.toUpperCase());searchAccount='';if(!matches.length){info.textContent=allEvents.some(e=>e.cell.toUpperCase()===q.toUpperCase())?'Cuadrante existente, pero sin soportes en los filtros seleccionados.':'No se encontró ese cuadrante.';return}}
- else{matches=a.cells.filter(c=>c.events.some(e=>e.cuenta===q));if(!matches.length){info.textContent=allEvents.some(e=>e.cuenta===q)?'Cuenta encontrada en el histórico, pero fuera de los filtros seleccionados.':'Cuenta sin soportes registrados en el histórico.';return}searchAccount=q}
- searchLocations=matches.map(c=>c.id);const target=matches.slice().sort((x,y)=>Math.max(...y.events.filter(e=>!searchAccount||e.cuenta===searchAccount).map(e=>Date.parse(e.date)))-Math.max(...x.events.filter(e=>!searchAccount||e.cuenta===searchAccount).map(e=>Date.parse(e.date))))[0];selectCell(target,a);info.textContent=matches.length===1?'Ubicación encontrada: '+target.id:`${matches.length} cuadrantes encontrados. Mostrando ${target.id}. Usa «Siguiente ubicación» para recorrerlos.`;let next=$('searchNext');if(next)next.hidden=matches.length<2;
+function supportSearchCoordinates(q){const m=q.trim().match(/^([+-]?\d+(?:\.\d+)?)\s*(?:,|;|\s)\s*([+-]?\d+(?:\.\d+)?)$/);if(!m)return null;const lat=Number(m[1]),lon=Number(m[2]);return Number.isFinite(lat)&&Number.isFinite(lon)&&Math.abs(lat)<=90&&Math.abs(lon)<=180?{lat,lon}:null}
+function doMapSearch(){
+ const q=$('mapSearch').value.trim(),info=$('searchResult');if(!q){info.textContent='Escribe una cuenta, OS, cuadrante o coordenadas.';return}
+ const coords=supportSearchCoordinates(q);if(coords){searchAccount='';searchLocations=[];selectedCell=null;if(searchMarker)map.removeLayer(searchMarker);if(searchOutline){map.removeLayer(searchOutline);searchOutline=null}searchMarker=L.marker([coords.lat,coords.lon]).addTo(map).bindPopup('Coordenadas: '+coords.lat+', '+coords.lon).openPopup();map.setView([coords.lat,coords.lon],17);info.textContent='Coordenadas localizadas.';$('searchNext').hidden=true;return}
+ const a=analyze(filtered()),isCell=/^Q/i.test(q),match=e=>e.cuenta===q||String(e.os||'').toLowerCase()===q.toLowerCase();
+ const matches=isCell?a.cells.filter(c=>c.id.toUpperCase()===q.toUpperCase()):a.cells.filter(c=>c.events.some(match));
+ if(!matches.length){info.replaceChildren();info.textContent=allEvents.some(e=>isCell?e.cell.toUpperCase()===q.toUpperCase():match(e))?'Encontrado en el histórico, pero fuera de los filtros seleccionados.':'Sin coincidencias en la base de soportes.';$('searchNext').hidden=true;return}
+ searchAccount=isCell?'':(matches[0].events.find(match)?.cuenta||'');searchLocations=matches.map(c=>c.id);
+ const focus=c=>{selectCell(c,a);if(!isCell){const e=c.events.filter(match).sort((x,y)=>y.date.localeCompare(x.date))[0];if(e){searchAccount=e.cuenta;updateSearchOverlay(a);map.setView([e.lat,e.lon],17)}}};
+ focus(matches[0]);info.replaceChildren();const text=document.createElement('span');text.textContent=matches.length===1?'Ubicación encontrada: '+matches[0].id:`${matches.length} cuadrantes encontrados. Elige una ubicación: `;info.appendChild(text);
+ if(matches.length>1){const list=document.createElement('select');list.setAttribute('aria-label','Resultados de búsqueda');for(const c of matches){const o=document.createElement('option');o.value=c.id;o.textContent=c.id+' · '+c.cluster;list.appendChild(o)}list.onchange=()=>focus(matches.find(c=>c.id===list.value));info.appendChild(list)}$('searchNext').hidden=matches.length<2;
 }
+
 function clearMapSearch(){searchAccount='';searchLocations=[];selectedCell=null;$('mapSearch').value='';$('searchResult').textContent='Búsqueda limpia.';$('searchNext').hidden=true;render()}
 function networkExport(cuenta){const n=networkFor(cuenta);if(!n)return {'OLT':'NO ENCONTRADO','FRAME':'NO ENCONTRADO','SLOT':'NO ENCONTRADO','PUERTO':'NO ENCONTRADO'};if(n.status!=='OK')return {'OLT':'DUPLICADO/REVISAR','FRAME':'DUPLICADO/REVISAR','SLOT':'DUPLICADO/REVISAR','PUERTO':'DUPLICADO/REVISAR'};return {'OLT':n.olt,'FRAME':n.frame,'SLOT':n.slot,'PUERTO':n.port}}
 function exportCell(cellId,type,a){const c=a.cells.find(z=>z.id===cellId);if(!c)return;let data=[],sheetName='Datos';

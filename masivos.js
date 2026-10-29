@@ -1,9 +1,10 @@
 (()=>{'use strict';
 const QUADRANT_METERS=500;const KEY='primavera_masivos_v1', $=id=>document.getElementById(id),fmt=n=>Math.round(n||0).toLocaleString('es-MX'),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let pe84SearchMarker=null;
 let records=[],filtered=[],map,points=L.layerGroup(),cells=L.layerGroup(),selectedTab='map',selectedYears=new Set(),selectedWeeks=new Set(),weekSelectionInitialized=false,selectedCauseCluster=null,selectedExploreCause=null;const color=['#e6468b','#9655c5','#ff901d','#35a9b4','#d16865','#ffb732','#6b65d8','#e66d30','#bc4071','#3da5df'];
 function dateValue(v){if(v instanceof Date&&!isNaN(v))return v.toISOString().slice(0,10);if(typeof v==='number'){const d=XLSX.SSF.parse_date_code(v);return d?`${d.y}-${String(d.m).padStart(2,'0')}-${String(d.d).padStart(2,'0')}`:''}const s=String(v??'').trim();if(/^\d{4}-\d{2}-\d{2}/.test(s))return s.slice(0,10);const m=s.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})/);return m?`${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`:''}
 function duration(v){if(typeof v==='number')return v*24;if(v instanceof Date)return v.getHours()+v.getMinutes()/60+v.getSeconds()/3600;const m=String(v??'').match(/^(?:(\d+)\s+days?[, ]+)?(\d+):(\d+)(?::(\d+))?/i);return m?(+(m[1]||0)*24)+(+m[2])+(+m[3])/60+(+m[4]||0)/3600:null}
-function clean(r){const get=k=>r[k]??'';let lat=Number(get('LATITUD')),lon=Number(get('LONGITUD'));if(!Number.isFinite(lat)||!Number.isFinite(lon)){const m=String(get('COORDENADAS')).match(/(-?\d+\.\d+)\s*[,; ]\s*(-?\d+\.\d+)/);if(m){lat=+m[1];lon=+m[2]}}const folio=String(get('FOLIO')).trim();return {folio,date:dateValue(get('FECHA INICIO')),lat,lon,cluster:String(get('CLUSTER')).trim()||'Sin clúster',olt:String(get('OLT/SEGMENTO')).trim()||'Sin OLT',cause:String(get('CAUSA')).trim()||'No determinada',clients:Number(get('CLIENTES AFECTADOS'))||0,ttr:duration(get('TTR')),tta:duration(get('TTA')),ttp:duration(get('TTP')),status:String(get('STATUS')),provider:String(get('PROVEEDOR')),ports:String(get('PUERTOS AFECTADOS')??'')}}
+function clean(r){const get=k=>r[k]??'';let lat=Number(get('LATITUD')),lon=Number(get('LONGITUD'));if(!Number.isFinite(lat)||!Number.isFinite(lon)){const m=String(get('COORDENADAS')).match(/(-?\d+\.\d+)\s*[,; ]\s*(-?\d+\.\d+)/);if(m){lat=+m[1];lon=+m[2]}}const folio=String(get('FOLIO')).trim();return {folio,qr:String(get('QR')).trim(),date:dateValue(get('FECHA INICIO')),lat,lon,cluster:String(get('CLUSTER')).trim()||'Sin clúster',olt:String(get('OLT/SEGMENTO')).trim()||'Sin OLT',cause:String(get('CAUSA')).trim()||'No determinada',clients:Number(get('CLIENTES AFECTADOS'))||0,ttr:duration(get('TTR')),tta:duration(get('TTA')),ttp:duration(get('TTP')),status:String(get('STATUS')),provider:String(get('PROVEEDOR')),ports:String(get('PUERTOS AFECTADOS')??'')}}
 function validPos(r){return r.lat>=-90&&r.lat<=90&&r.lon>=-180&&r.lon<=180&&Number.isFinite(r.lat)&&Number.isFinite(r.lon)}
 function quadrant(r){const meters=111320,lat0=20.65;const x=Math.floor(r.lon*meters*Math.cos(lat0*Math.PI/180)/QUADRANT_METERS),y=Math.floor(r.lat*meters/QUADRANT_METERS);return `Q-${x}-${y}`}
 function group(items,key){const m=new Map();items.forEach(r=>{const k=key(r);if(!m.has(k))m.set(k,[]);m.get(k).push(r)});return [...m].map(([name,rs])=>({name,rows:rs,n:rs.length,clients:rs.reduce((a,r)=>a+r.clients,0),ttr:avg(rs.map(r=>r.ttr))})).sort((a,b)=>b.n-a.n)}
@@ -13,27 +14,65 @@ function tr(cols){return `<tr>${cols.map(c=>`<td>${c}</td>`).join('')}</tr>`}
 function durationText(n){return n==null?'—':`${n.toFixed(1)} h`}
 function weekParts(date){if(!date)return null;const d=new Date(date+'T12:00:00Z');if(Number.isNaN(d.getTime()))return null;const day=d.getUTCDay()||7;d.setUTCDate(d.getUTCDate()+4-day);const year=d.getUTCFullYear();const jan1=new Date(Date.UTC(year,0,1));const week=Math.ceil((((d-jan1)/86400000)+1)/7);const monday=new Date(date+'T12:00:00Z');monday.setUTCDate(monday.getUTCDate()-(day-1));const sunday=new Date(monday);sunday.setUTCDate(sunday.getUTCDate()+6);return {year,week,key:`${year}-S${String(week).padStart(2,'0')}`,monday:monday.toISOString().slice(0,10),sunday:sunday.toISOString().slice(0,10)}}
 function weekLabel(w){const f=d=>{const [y,m,day]=d.split('-');return `${day}/${m}`};return `Semana ${w.week} · ${f(w.monday)} – ${f(w.sunday)}`}
-let activeDates=null,draftDates=null,calendarYear=new Date().getFullYear(),calendarMonth=new Date().getMonth(),calendarLevel='days',rangeStart=null,rangeEnd=null,monthClickTimer=null,preservedMonthDates=new Set();
-const isoDay=(y,m,d)=>`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-const isoFromTime=t=>new Date(t).toISOString().slice(0,10);
-function allRecordDates(){return new Set(records.map(r=>r.date).filter(Boolean))}
-function availableYears(){return [...new Set([...allRecordDates()].map(d=>Number(d.slice(0,4))))].filter(Number.isFinite).sort((a,b)=>a-b)}
-function datesBetween(start,end){const out=new Set();if(!start||!end)return out;let a=Date.parse(start+'T12:00:00Z'),b=Date.parse(end+'T12:00:00Z');if(a>b)[a,b]=[b,a];for(let t=a;t<=b;t+=86400000)out.add(isoFromTime(t));return out}
-function refreshWeeks(){if(activeDates===null){const dates=[...allRecordDates()].sort();if(dates.length){const [y,m]=dates[dates.length-1].split('-').map(Number);calendarYear=y;calendarMonth=m-1}}updateDateCaption();if(!$('dateDropdown').classList.contains('hidden'))drawCalendar()}
-function updateDateCaption(){$('dateToggle').textContent='Calendario'+(activeDates===null?'':` · ${activeDates.size} días`)}
-function dateInMonth(y,m){const a=isoDay(y,m,1),b=isoDay(y,m+1,0);return draftDates!==null&&[...draftDates].some(d=>d>=a&&d<=b)}
-function drawCalendar(){const names=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];$('calendarTitle').textContent=calendarLevel==='days'?`${names[calendarMonth]} ${calendarYear} ⌃`:calendarLevel==='months'?`${calendarYear} ⌃`:'Año ⌃';$('calendarWeekdays').classList.toggle('hidden',calendarLevel!=='days');$('fullWeek').disabled=calendarLevel!=='days';$('fullMonth').disabled=calendarLevel!=='days';$('calendarDays').classList.toggle('calendar-tiles',calendarLevel!=='days');let out='';if(calendarLevel==='years'){const years=availableYears();out=years.length?years.map(y=>`<button type="button" data-year="${y}" class="${draftDates!==null&&[...draftDates].some(d=>d.startsWith(y+'-'))?'chosen':''}">${y}</button>`).join(''):'<span class="calendar-empty">Sin años en el histórico</span>'}else if(calendarLevel==='months'){out=names.map((name,m)=>`<button type="button" data-month="${m}" class="${dateInMonth(calendarYear,m)?'chosen':''}">${name.slice(0,3)}</button>`).join('')}else{const first=(new Date(Date.UTC(calendarYear,calendarMonth,1)).getUTCDay()+6)%7,last=new Date(Date.UTC(calendarYear,calendarMonth+1,0)).getUTCDate();out='<span></span>'.repeat(first);for(let d=1;d<=last;d++){const iso=isoDay(calendarYear,calendarMonth,d);out+=`<button type="button" data-date="${iso}" class="${draftDates?.has(iso)?'chosen':''}">${d}</button>`}}$('calendarDays').innerHTML=out;$('draftDatesLabel').textContent=draftDates===null?'Todas las fechas (sin filtro)':draftDates.size?`${draftDates.size} días seleccionados. Pulsa OK para aplicar.`:'Sin fechas seleccionadas. Pulsa OK para mostrar todo.'}
-function toggleCalendarMonth(y,m){
- const first=Date.UTC(y,m,1),last=Date.UTC(y,m+1,0);
- if(draftDates===null)draftDates=new Set();
- const days=[];for(let t=first;t<=last;t+=86400000)days.push(isoFromTime(t));
- const allSelected=days.every(d=>draftDates.has(d));
- for(const d of days){if(allSelected){draftDates.delete(d);preservedMonthDates.delete(d)}else{draftDates.add(d);preservedMonthDates.add(d)}}
- rangeStart=null;rangeEnd=null;drawCalendar();
+const isoDay=(y,m,d)=>new Date(Date.UTC(y,m,d,12)).toISOString().slice(0,10);
+let activeDates=null,draftDates=null,activeWeeks=new Set(),draftWeeks=new Set(),activeMonths=new Set(),draftMonths=new Set();
+let availableDates=new Set(),availableWeeks=new Map(),availableMonths=new Map(),periodColors=new Map();
+let calendarYear=new Date().getFullYear(),calendarMonth=new Date().getMonth(),calendarLevel='days',monthClickTimer=null;
+function allRecordDates(){return new Set(records.map(r=>r.date).filter(d=>/^\d{4}-\d{2}-\d{2}$/.test(d||'')))}
+function datesBetween(start,end){const out=new Set();let a=Date.parse(start+'T12:00:00Z'),b=Date.parse(end+'T12:00:00Z');if(!Number.isFinite(a)||!Number.isFinite(b))return out;if(a>b)[a,b]=[b,a];for(let t=a;t<=b;t+=86400000)out.add(new Date(t).toISOString().slice(0,10));return out}
+function validGroups(groups,dates,available){for(const key of groups){const days=available.get(key)||[];if(!dates||!days.length||!days.every(d=>dates.has(d)))groups.delete(key)}}
+function refreshData(){
+ availableDates=allRecordDates();availableWeeks=new Map();availableMonths=new Map();
+ for(const d of [...availableDates].sort()){const key=weekParts(d).key,month=d.slice(0,7);if(!availableWeeks.has(key))availableWeeks.set(key,[]);availableWeeks.get(key).push(d);if(!availableMonths.has(month))availableMonths.set(month,[]);availableMonths.get(month).push(d)}
+ if(activeDates!==null){activeDates=new Set([...activeDates].filter(d=>availableDates.has(d)));if(!activeDates.size){activeDates=null;/* Conservar la visualización inicial de Planta Externa. */}}
+ if(draftDates!==null)draftDates=new Set([...draftDates].filter(d=>availableDates.has(d)));
+ validGroups(activeWeeks,activeDates,availableWeeks);validGroups(activeMonths,activeDates,availableMonths);validGroups(draftWeeks,draftDates,availableWeeks);validGroups(draftMonths,draftDates,availableMonths);
+ updateDateCaption();if(!$('dateDropdown').classList.contains('hidden'))drawCalendar();
 }
-function toggleDay(iso){if(!rangeStart||rangeEnd){rangeStart=iso;rangeEnd=null;draftDates=new Set([...preservedMonthDates,iso])}else{rangeEnd=iso;draftDates=new Set([...preservedMonthDates,...datesBetween(rangeStart,rangeEnd)])}drawCalendar()}
-function chooseSpan(start,end){if(draftDates===null)draftDates=new Set();for(let t=start;t<=end;t+=86400000)draftDates.add(isoFromTime(t));rangeStart=null;rangeEnd=null;drawCalendar()}
-function monthShift(offset){if(calendarLevel==='years')return;const d=new Date(Date.UTC(calendarYear,calendarMonth+(calendarLevel==='days'?offset:offset*12),1));calendarYear=d.getUTCFullYear();calendarMonth=d.getUTCMonth();drawCalendar()}
+function updateDateCaption(){$('dateToggle').textContent='Calendario'+(activeDates===null?'':` · ${activeDates.size} días`)}
+function monthAvailable(y,m){return availableMonths.has(isoDay(y,m,1).slice(0,7))}
+function availableYears(){return [...new Set([...availableDates].map(d=>+d.slice(0,4)))].sort((a,b)=>a-b)}
+function toggleDay(date){
+ if(!availableDates.has(date))return;if(draftDates===null)draftDates=new Set();
+ if(draftDates.has(date)){draftDates.delete(date);draftWeeks.delete(weekParts(date).key);draftMonths.delete(date.slice(0,7))}else draftDates.add(date);
+ drawCalendar();
+}
+function selectWeek(key,on){
+ const days=availableWeeks.get(key)||[];if(!days.length)return;if(draftDates===null)draftDates=new Set();
+ if(on===undefined)on=!draftWeeks.has(key);
+ if(on){for(const d of days){draftDates.add(d);draftMonths.delete(d.slice(0,7))}draftWeeks.add(key)}
+ else{for(const d of days){draftDates.delete(d);draftMonths.delete(d.slice(0,7))}draftWeeks.delete(key)}
+ drawCalendar();
+}
+function toggleCalendarMonth(y,m,on){
+ const key=isoDay(y,m,1).slice(0,7),days=availableMonths.get(key)||[];if(!days.length)return;if(draftDates===null)draftDates=new Set();
+ if(on===undefined)on=!draftMonths.has(key);
+ for(const d of days){on?draftDates.add(d):draftDates.delete(d);draftWeeks.delete(weekParts(d).key)}
+ on?draftMonths.add(key):draftMonths.delete(key);drawCalendar();
+}
+function drawCalendar(){
+ $('calendarTitle').textContent=calendarLevel==='days'?`${MONTH_NAMES[calendarMonth]} ${calendarYear} ⌃`:calendarLevel==='months'?`${calendarYear} ⌃`:'Año ⌃';
+ $('calendarWeekdays').classList.toggle('hidden',calendarLevel!=='days');$('calendarDays').classList.toggle('calendar-tiles',calendarLevel!=='days');
+ $('fullMonth').disabled=calendarLevel!=='days'||!monthAvailable(calendarYear,calendarMonth);
+ $('fullWeek').disabled=calendarLevel!=='days'||!availableWeeks.has(weekParts(isoDay(calendarYear,calendarMonth,1)).key);
+ let html='';
+ if(calendarLevel==='years'){const years=availableYears();html=years.length?years.map(y=>`<button type="button" data-year="${y}" class="${[...(draftDates||[])].some(d=>d.startsWith(y+'-'))?'chosen':''}">${y}</button>`).join(''):'<span class="calendar-empty">Sin años en el histórico</span>'}
+ else if(calendarLevel==='months'){html=MONTH_NAMES.map((name,m)=>{const key=isoDay(calendarYear,m,1).slice(0,7);return `<button type="button" data-month="${m}" ${availableMonths.has(key)?'':'disabled'} class="${[...(draftDates||[])].some(d=>d.startsWith(key))?'chosen':''}">${name.slice(0,3)}</button>`}).join('')}
+ else{
+  const first=weekParts(isoDay(calendarYear,calendarMonth,1)).monday,last=new Date(Date.UTC(calendarYear,calendarMonth+1,0)).getUTCDate(),start=Date.parse(first+'T12:00:00Z'),end=Date.parse(isoDay(calendarYear,calendarMonth,last)+'T12:00:00Z');
+  for(let t=start;t<=end;t+=7*86400000){
+   const monday=new Date(t).toISOString().slice(0,10),w=weekParts(monday),days=availableWeeks.get(w.key)||[],checked=draftWeeks.has(w.key)&&days.length&&days.every(d=>draftDates?.has(d)),partial=!checked&&days.some(d=>draftDates?.has(d));
+   html+=`<label class="pe86-week-check" title="Semana ${w.week}: ${w.monday} a ${w.sunday}"><input type="checkbox" data-week-key="${w.key}" data-partial="${partial?'true':'false'}" aria-label="Seleccionar semana ${w.week} de ${w.year}" ${checked?'checked':''} ${days.length?'':'disabled'}></label>`;
+   for(let i=0;i<7;i++){const date=new Date(t+i*86400000).toISOString().slice(0,10),within=date.slice(0,7)===isoDay(calendarYear,calendarMonth,1).slice(0,7);html+=within?`<button type="button" data-date="${date}" class="${draftDates?.has(date)?'chosen':''}" ${availableDates.has(date)?'':'disabled'}>${+date.slice(8)}</button>`:'<span class="pe86-outside" aria-hidden="true"></span>'}
+  }
+ }
+ $('calendarDays').innerHTML=html;
+ $('calendarDays').querySelectorAll('input[data-week-key]').forEach(input=>{input.indeterminate=input.dataset.partial==='true';input.setAttribute('aria-checked',input.indeterminate?'mixed':String(input.checked))});
+ $('draftDatesLabel').textContent=draftDates?.size?`${draftDates.size} días seleccionados. Días y semanas se acumulan; pulsa OK para aplicar.`:'Selecciona días o semanas. Clear + OK muestra todo el histórico.';
+}
+function monthShift(n){if(calendarLevel==='years')return;const d=new Date(Date.UTC(calendarYear,calendarMonth+(calendarLevel==='days'?n:n*12),1));calendarYear=d.getUTCFullYear();calendarMonth=d.getUTCMonth();drawCalendar()}
+function refreshWeeks(){refreshData()}
+function clearCalendarGroups(){activeWeeks.clear();draftWeeks.clear();activeMonths.clear();draftMonths.clear()}
 function getFilters(){return {cluster:$('cluster').value,olt:$('olt').value,cause:$('cause').value,impact:$('impact').value,ttr:$('ttr').value}}
 function selectOptions(id,values){const el=$(id),old=el.value;el.innerHTML='<option value="">Todos</option>'+[...new Set(values)].sort((a,b)=>a.localeCompare(b,'es')).map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');if([...el.options].some(o=>o.value===old))el.value=old}
 function refreshSelects(){selectOptions('cluster',records.map(r=>r.cluster));selectOptions('olt',records.map(r=>r.olt));selectOptions('cause',records.map(r=>r.cause))}
@@ -42,13 +81,13 @@ function render(){preparePeriods();const a=filtered,total=a.reduce((s,r)=>s+r.cl
 function mapExplorationRows(){return filtered} // V-61: una sola selección compartida para KPI, gráficas y mapa
 // V-57: coloración temporal y agrupación visual, siempre sobre registros ya filtrados.
 const V57_COLORS=['#F12B38','#087FE8','#F4C300','#00A84F','#A64DFF','#FF7A00','#00C7D4','#F02FA6','#6848DF','#8BB800'];
-let periodColors=new Map(),periodMode='week';
+
 const MONTH_NAMES=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-function isWholeMonths(dates){if(!dates||!dates.size)return false;const ordered=[...dates].sort(),first=ordered[0],last=ordered[ordered.length-1];return first.endsWith('-01')&&Number(last.slice(8))===new Date(Date.UTC(+last.slice(0,4),+last.slice(5,7),0)).getUTCDate()&&dates.size===Math.round((Date.parse(last+'T12:00:00Z')-Date.parse(first+'T12:00:00Z'))/86400000)+1}
-function periodKey(date){if(periodMode==='month')return date.slice(0,7);const w=weekParts(date);return w?w.key:date.slice(0,7)}
-function periodLabel(key){if(periodMode==='month'){const [y,m]=key.split('-');return `${MONTH_NAMES[Number(m)-1]}/${y}`}const m=key.match(/^(\d{4})-S(\d{2})$/);return m?`${Number(m[2])}/${m[1]}`:key}
+function periodKey(date){const w=weekParts(date);if(w&&activeWeeks.has(w.key))return 'W|'+w.key;const month=date.slice(0,7);if(activeMonths.has(month))return 'M|'+month;return 'D|'+date}
+function periodLabel(key){const [kind,value]=key.split('|');if(kind==='W'){const m=value.match(/^(\d{4})-S(\d{2})$/);return `Semana ${+m[2]}/${m[1]}`}if(kind==='M'){const [y,m]=value.split('-');return `${MONTH_NAMES[+m-1]}/${y}`}const [y,m,d]=value.split('-');return `${d}/${m}/${y}`}
 function updatePeriodLegend(rows){const el=$('v57Legend');if(!el)return;const show=activeDates!==null&&rows.length>0;el.classList.toggle('hidden',!show);if(!show)return;const keys=[...new Set(rows.map(r=>periodKey(r.date)))].sort();el.innerHTML=keys.map(k=>`<span class="v57-legend-item" style="color:${periodColors.get(k)}"><i style="background:${periodColors.get(k)}"></i>${esc(periodLabel(k))}</span>`).join('')}
-function preparePeriods(){periodMode=isWholeMonths(activeDates)?'month':'week';const keys=[...new Set(filtered.filter(r=>r.date).map(r=>periodKey(r.date)))].sort();periodColors=new Map(keys.map((k,i)=>[k,activeDates===null?'#e02020':V57_COLORS[i%V57_COLORS.length]]))}
+function pe86Color(i){if(V57_COLORS[i])return V57_COLORS[i];const h=i*137.508%360,l=.43,a=.7*Math.min(l,1-l);return '#'+[0,8,4].map(n=>{const k=(n+h/30)%12;return Math.round(255*(l-a*Math.max(-1,Math.min(k-3,9-k,1)))).toString(16).padStart(2,'0')}).join('')}
+function preparePeriods(){const keys=[...new Set(filtered.filter(r=>r.date).map(r=>periodKey(r.date)))].sort();periodColors=new Map(keys.map((k,i)=>[k,activeDates===null?'#e02020':pe86Color(i)]))}
 // V-65: SOLO cuadrantes. UTM 13N (WGS84), cuadrícula por cada mancha KMZ.
 // Las celdas de borde permanecen completas; los filtros nunca intervienen.
 const GRID_A=6378137,GRID_F=1/298.257223563,GRID_E2=GRID_F*(2-GRID_F),GRID_EP2=GRID_E2/(1-GRID_E2),GRID_K0=.9996,GRID_LON0=-105*Math.PI/180;
@@ -63,7 +102,7 @@ function gridOrigin(rings){const outer=rings[0],c=gridCenter(outer);if(gridInSha
 // V-66: una sola malla UTM 13N para todas las manchas, origen global (0,0) y deduplicacion por indice.
 function drawCoverageQuadrants(newShapes){const shapes=newShapes||window.primaveraCoverageShapes?.()||[],size=QUADRANT_METERS,seen=new Set();cells.eachLayer(layer=>{if(layer._coverageGridKey)seen.add(layer._coverageGridKey)});for(let si=0;si<shapes.length;si++){const rings=shapes[si].map(r=>r.map(([lat,lon])=>gridUtm(lat,lon))).filter(r=>r.length>=3);if(!rings.length)continue;const outer=rings[0],xs=outer.map(p=>p[0]),ys=outer.map(p=>p[1]),minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(...ys),maxY=Math.max(...ys);const ix0=Math.floor(minX/size),ix1=Math.floor(maxX/size),iy0=Math.floor(minY/size),iy1=Math.floor(maxY/size);if((ix1-ix0+1)*(iy1-iy0+1)>30000){console.warn('Cuadrícula omitida: cobertura excesivamente extensa',si);continue}for(let ix=ix0;ix<=ix1;ix++)for(let iy=iy0;iy<=iy1;iy++){const key=ix+':'+iy;if(seen.has(key))continue;const x=ix*size,y=iy*size;if(!gridTouches(x,y,rings))continue;seen.add(key);const coords=[[x,y],[x+size,y],[x+size,y+size],[x,y+size]].map(p=>gridLatLon(...p));Object.assign(L.polygon(coords,{color:'#AD8BC6',weight:3.6,opacity:1,fillOpacity:.13,interactive:false}),{_coverageGridKey:key}).addTo(cells)}}}
 window.addEventListener('primavera:coverage-updated',event=>{if(!map)return;if($('showCells').checked)drawCoverageQuadrants(event.detail?.shapes);top68CoverageChanged()});
-function renderMap(q){points.clearLayers();cells.clearLayers();const mapRows=top68MapRows(mapExplorationRows());const mapGroup=[];if($('showCells').checked||top68State?.only)drawCoverageQuadrants();top68StyleCells();if($('showPins').checked||top68State?.only){const groups=new Map();mapRows.filter(validPos).forEach(r=>{const key=`${Math.round(r.lat*50000)}:${Math.round(r.lon*50000)}`;if(!groups.has(key))groups.set(key,[]);groups.get(key).push(r)});for(const rs of groups.values()){const lat=rs.reduce((n,r)=>n+r.lat,0)/rs.length,lon=rs.reduce((n,r)=>n+r.lon,0)/rs.length;const periods=[...new Set(rs.map(r=>periodKey(r.date)))];const shades=periods.map(k=>periodColors.get(k)||'#e02020');let marker;if(rs.length===1){marker=L.circleMarker([lat,lon],{radius:5,color:'#fff',weight:1.5,fillColor:shades[0],fillOpacity:1})}else{const segments=shades.length===1?`<circle cx="15" cy="15" r="11" fill="${shades[0]}"/>`:shades.map((c,i)=>{const a=2*Math.PI*i/shades.length-Math.PI/2,b=2*Math.PI*(i+1)/shades.length-Math.PI/2;const x1=15+11*Math.cos(a),y1=15+11*Math.sin(a),x2=15+11*Math.cos(b),y2=15+11*Math.sin(b);return `<path d="M15 15 L${x1} ${y1} A11 11 0 ${b-a>Math.PI?1:0} 1 ${x2} ${y2} Z" fill="${c}"/>`}).join('');const html=`<div class="v57-pin"><svg viewBox="0 0 30 30" width="30" height="30">${segments}<circle cx="15" cy="15" r="11" fill="none" stroke="white" stroke-width="2"/></svg><span class="v57-count">${rs.length}</span></div>`;marker=L.marker([lat,lon],{icon:L.divIcon({html,className:'v57-marker-icon',iconSize:[44,30],iconAnchor:[15,15]})})}const popup=rs.map(r=>`<div class="v57-folio"><span class="v57-dot" style="background:${periodColors.get(periodKey(r.date))||'#e02020'}"></span><div><b>Folio ${esc(r.folio)}</b> <small>${esc(periodLabel(periodKey(r.date)))}</small><div>${esc(r.cluster)} · ${esc(r.olt)}</div><div>${esc(r.cause)}</div><div>Clientes: ${fmt(r.clients)} · TTR: ${durationText(r.ttr)} · ${esc(r.date)}</div></div></div>`).join('');marker.bindPopup(`<div class="v57-popup"><strong>${rs.length} ${rs.length===1?'folio':'folios'} en esta ubicación</strong>${popup}</div>`,{maxWidth:350}).addTo(points)}}cells.addTo(map);points.addTo(map);updatePeriodLegend(mapRows)}
+function renderMap(q){pe84ClearMarker();$('pe84Results').replaceChildren();points.clearLayers();cells.clearLayers();const mapRows=top68MapRows(mapExplorationRows());const mapGroup=[];if($('showCells').checked||top68State?.only)drawCoverageQuadrants();top68StyleCells();if($('showPins').checked||top68State?.only){const groups=new Map();mapRows.filter(validPos).forEach(r=>{const key=`${Math.round(r.lat*50000)}:${Math.round(r.lon*50000)}`;if(!groups.has(key))groups.set(key,[]);groups.get(key).push(r)});for(const rs of groups.values()){const lat=rs.reduce((n,r)=>n+r.lat,0)/rs.length,lon=rs.reduce((n,r)=>n+r.lon,0)/rs.length;const periods=[...new Set(rs.map(r=>periodKey(r.date)))];const shades=periods.map(k=>periodColors.get(k)||'#e02020');let marker;if(rs.length===1){marker=L.circleMarker([lat,lon],{radius:5,color:'#fff',weight:1.5,fillColor:shades[0],fillOpacity:1})}else{const segments=shades.length===1?`<circle cx="15" cy="15" r="11" fill="${shades[0]}"/>`:shades.map((c,i)=>{const a=2*Math.PI*i/shades.length-Math.PI/2,b=2*Math.PI*(i+1)/shades.length-Math.PI/2;const x1=15+11*Math.cos(a),y1=15+11*Math.sin(a),x2=15+11*Math.cos(b),y2=15+11*Math.sin(b);return `<path d="M15 15 L${x1} ${y1} A11 11 0 ${b-a>Math.PI?1:0} 1 ${x2} ${y2} Z" fill="${c}"/>`}).join('');const html=`<div class="v57-pin"><svg viewBox="0 0 30 30" width="30" height="30">${segments}<circle cx="15" cy="15" r="11" fill="none" stroke="white" stroke-width="2"/></svg><span class="v57-count">${rs.length}</span></div>`;marker=L.marker([lat,lon],{icon:L.divIcon({html,className:'v57-marker-icon',iconSize:[44,30],iconAnchor:[15,15]})})}const popup=rs.map(pe84Popup).join('');marker._pe84Rows=rs;pe85BindPopup(marker,`<div class="v57-popup"><strong>${rs.length} ${rs.length===1?'folio':'folios'} en esta ubicación</strong>${popup}</div>`).addTo(points)}}cells.addTo(map);points.addTo(map);updatePeriodLegend(mapRows)}
 function drawDonut(target,legendId,groups,mode,clickable=false,causeClickable=false){const total=groups.reduce((sum,g)=>sum+(mode==='clients'?g.clients:g.n),0);const radius=62,circ=2*Math.PI*radius;let used=0;const svg=groups.filter(g=>(mode==='clients'?g.clients:g.n)>0).map((g,i)=>{const v=mode==='clients'?g.clients:g.n;const fraction=v/Math.max(1,total);const dash=fraction*circ;const pct=(100*fraction).toFixed(1);const tip=`${g.name} | ${g.n} folios | ${fmt(g.clients)} clientes afectados | ${pct}% ${mode==='clients'?'de clientes afectados':'de folios'}`;const seg=`<circle class="donut-segment" ${clickable?`data-cluster="${esc(g.name)}"`:``} ${causeClickable?`data-cause="${esc(g.name)}"`:``} cx="90" cy="90" r="${radius}" fill="none" stroke="${color[i%color.length]}" stroke-width="32" stroke-dasharray="${dash} ${circ-dash}" stroke-dashoffset="${-used*circ}" transform="rotate(-90 90 90)" data-tip="${esc(tip)}"><title>${esc(tip)}</title></circle>`;used+=fraction;return seg}).join('');$(target).innerHTML=`<svg class="donut-svg" viewBox="0 0 180 180" role="img" aria-label="Distribución ${mode==='clients'?'de clientes afectados por clúster':'de folios por causa'}"><circle cx="90" cy="90" r="${radius}" fill="none" stroke="#f3e4d9" stroke-width="32"/>${svg}<circle cx="90" cy="90" r="43" fill="#fffaf6"/><text x="90" y="86" text-anchor="middle" font-size="17" font-weight="800">${fmt(total)}</text><text x="90" y="103" text-anchor="middle" font-size="10">${mode==='clients'?'clientes afectados':'folios'}</text></svg>`;
 $(legendId).innerHTML=groups.map((g,i)=>{const val=mode==='clients'?g.clients:g.n;const pct=(100*val/Math.max(1,total)).toFixed(1);return `<div class="legend-row" title="${esc(g.name)} · ${g.n} folios · ${fmt(g.clients)} clientes afectados"><i style="background:${color[i%color.length]}"></i>${clickable?`<button type="button" class="cluster-legend-btn" data-cluster="${esc(g.name)}">${esc(g.name)}</button>`:esc(g.name)} · ${pct}%</div>`}).join('')||'<small>Sin registros para los filtros actuales</small>'}
 function renderCause(c){const cluster=$('cluster').value;drawDonut('donut','causeLegend',c,'folios',false,true);$('causeScope').textContent=cluster?`Causas de ${cluster} · ${filtered.length} folios`:'Todos los clústeres';$('causeBack').classList.toggle('hidden',!(!cluster&&!$('cause').value))}
@@ -86,18 +125,19 @@ async function importFile(file){if(!file)return;masivosUploadOpen(file);$('notic
 function download(){if(!filtered.length){alert('No hay folios para exportar');return}const out=filtered.map(r=>({'FOLIO':r.folio,'FECHA INICIO':r.date,'LATITUD':r.lat,'LONGITUD':r.lon,'CLUSTER':r.cluster,'OLT/SEGMENTO':r.olt,'CAUSA':r.cause,'CLIENTES AFECTADOS':r.clients,'TTR HORAS':r.ttr,'PROVEEDOR':r.provider,'PUERTOS AFECTADOS':r.ports}));const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(out),'Masivos');XLSX.writeFile(wb,'Cortes_Masivos_Filtrados.xlsx')}
 var top68State={open:false,only:false,rows:[],selected:null,names:{},features:null};
 map=L.map('map',{preferCanvas:true}).setView([20.65,-103.43],12);window.initCoverageV53?.(map);L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'Imagery © Esri',maxZoom:19}).addTo(map);try{records=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(records))records=[]}catch(e){records=[]}refreshSelects();refreshWeeks();filter();if(records.length)$('notice').textContent=`Histórico recuperado: ${fmt(records.length)} folios. Datos almacenados localmente.`;
-$('dateToggle').addEventListener('click',()=>{const opening=$('dateDropdown').classList.contains('hidden');$('dateDropdown').classList.toggle('hidden',!opening);$('dateToggle').setAttribute('aria-expanded',String(opening));if(opening){draftDates=activeDates===null?null:new Set(activeDates);rangeStart=null;rangeEnd=null;preservedMonthDates=new Set();calendarLevel='days';calendarYear=new Date().getFullYear();calendarMonth=new Date().getMonth();drawCalendar()}});
-$('prevMonth').addEventListener('click',()=>monthShift(-1));$('nextMonth').addEventListener('click',()=>monthShift(1));
-$('calendarTitle').addEventListener('click',()=>{calendarLevel=calendarLevel==='days'?'months':'years';drawCalendar()});$('calendarDays').addEventListener('click',e=>{const year=e.target.closest('[data-year]'),month=e.target.closest('[data-month]'),day=e.target.closest('[data-date]');if(year){calendarYear=Number(year.dataset.year);calendarLevel='months';drawCalendar()}else if(month){const y=calendarYear,m=Number(month.dataset.month);if(monthClickTimer)clearTimeout(monthClickTimer);monthClickTimer=setTimeout(()=>{monthClickTimer=null;toggleCalendarMonth(y,m)},260)}else if(day)toggleDay(day.dataset.date)});
-$('calendarDays').addEventListener('dblclick',e=>{const month=e.target.closest('[data-month]');if(!month)return;if(monthClickTimer){clearTimeout(monthClickTimer);monthClickTimer=null}calendarMonth=Number(month.dataset.month);calendarLevel='days';drawCalendar()});
-$('fullWeek').addEventListener('click',()=>{const d=new Date(Date.UTC(calendarYear,calendarMonth,1));d.setUTCDate(d.getUTCDate()-(d.getUTCDay()+6)%7);chooseSpan(d.getTime(),d.getTime()+6*86400000)});
-$('fullMonth').addEventListener('click',()=>chooseSpan(Date.UTC(calendarYear,calendarMonth,1),Date.UTC(calendarYear,calendarMonth+1,0)));
-$('clearDates').addEventListener('click',()=>{draftDates=new Set();preservedMonthDates=new Set();rangeStart=null;rangeEnd=null;drawCalendar()});
-$('applyDates').addEventListener('click',()=>{activeDates=draftDates===null||draftDates.size===0?null:new Set(draftDates);$('dateDropdown').classList.add('hidden');$('dateToggle').setAttribute('aria-expanded','false');updateDateCaption();filter()});
+$('dateToggle').addEventListener('click',()=>{const opening=$('dateDropdown').classList.contains('hidden');$('dateDropdown').classList.toggle('hidden',!opening);$('dateToggle').setAttribute('aria-expanded',String(opening));$('dateToggle').setAttribute('aria-pressed',String(opening));if(opening){refreshData();draftDates=activeDates===null?new Set():new Set(activeDates);draftWeeks=new Set(activeWeeks);draftMonths=new Set(activeMonths);calendarLevel='days';calendarYear=new Date().getFullYear();calendarMonth=new Date().getMonth();if(!monthAvailable(calendarYear,calendarMonth)&&availableDates.size){const latest=[...availableDates].sort().at(-1);calendarYear=+latest.slice(0,4);calendarMonth=+latest.slice(5,7)-1}drawCalendar()}});
+$('prevMonth').addEventListener('click',()=>monthShift(-1));$('nextMonth').addEventListener('click',()=>monthShift(1));$('calendarTitle').addEventListener('click',()=>{calendarLevel=calendarLevel==='days'?'months':'years';drawCalendar()});
+$('calendarDays').addEventListener('click',e=>{const year=e.target.closest('[data-year]'),month=e.target.closest('[data-month]'),day=e.target.closest('[data-date]');if(e.target.closest('button')?.disabled)return;if(year){calendarYear=+year.dataset.year;calendarLevel='months';drawCalendar()}else if(month){if(monthClickTimer)clearTimeout(monthClickTimer);const y=calendarYear,m=+month.dataset.month;monthClickTimer=setTimeout(()=>{monthClickTimer=null;toggleCalendarMonth(y,m)},260)}else if(day)toggleDay(day.dataset.date)});
+$('calendarDays').addEventListener('change',e=>{if(e.target.matches('input[data-week-key]'))selectWeek(e.target.dataset.weekKey,e.target.checked)});
+$('calendarDays').addEventListener('dblclick',e=>{const month=e.target.closest('[data-month]');if(!month||month.disabled)return;if(monthClickTimer){clearTimeout(monthClickTimer);monthClickTimer=null}calendarMonth=+month.dataset.month;calendarLevel='days';drawCalendar()});
+$('fullWeek').addEventListener('click',()=>selectWeek(weekParts(isoDay(calendarYear,calendarMonth,1)).key,true));
+$('fullMonth').addEventListener('click',()=>toggleCalendarMonth(calendarYear,calendarMonth,true));
+$('clearDates').addEventListener('click',()=>{draftDates=new Set();draftWeeks.clear();draftMonths.clear();drawCalendar()});
+$('applyDates').addEventListener('click',()=>{activeDates=draftDates?.size?new Set(draftDates):null;activeWeeks=new Set(draftWeeks);activeMonths=new Set(draftMonths);validGroups(activeWeeks,activeDates,availableWeeks);validGroups(activeMonths,activeDates,availableMonths);$('dateDropdown').classList.add('hidden');$('dateToggle').setAttribute('aria-expanded','false');$('dateToggle').setAttribute('aria-pressed','false');updateDateCaption();filter()});
 const tooltip=document.createElement('div');tooltip.className='chart-tooltip';document.body.appendChild(tooltip);document.addEventListener('click',e=>{const cluster=e.target.closest?.('[data-cluster]'),cause=e.target.closest?.('[data-cause]');if(cluster){$('cluster').value=cluster.dataset.cluster;refreshExploration()}else if(cause){$('cause').value=cause.dataset.cause;refreshExploration()}});$('causeBack').addEventListener('click',()=>{$('cluster').value='';$('cause').value='';refreshExploration()});$('exploreBack').addEventListener('click',()=>{$('cluster').value='';$('cause').value='';refreshExploration()});document.addEventListener('pointermove',e=>{const seg=e.target.closest?.('.donut-segment');if(seg){tooltip.textContent=seg.dataset.tip;tooltip.style.left=Math.min(e.clientX+15,window.innerWidth-330)+'px';tooltip.style.top=Math.max(8,e.clientY-55)+'px';tooltip.style.display='block'}else tooltip.style.display='none'});
 $('masivosUploadAccept').addEventListener('click',()=>{$('masivosUploadOverlay').hidden=true});$('file').addEventListener('change',e=>importFile(e.target.files[0]));$('export').addEventListener('click',download);$('clear').addEventListener('click',()=>{if(confirm('¿Borrar solamente el histórico de Cortes Masivos? No se afectarán Soportes ni Repeat 60.')){records=[];selectedCauseCluster=null;selectedExploreCause=null;localStorage.removeItem(KEY);refreshSelects();refreshWeeks();filter();$('notice').textContent='Histórico de Cortes Masivos eliminado.'}});// V1.39: restablecer únicamente el estado de la vista, sin escrituras de almacenamiento.
 $('history').addEventListener('click',()=>{
- activeDates=null;draftDates=null;
+ activeDates=null;draftDates=null;clearCalendarGroups();
  selectedCauseCluster=null;selectedExploreCause=null;
  updateDateCaption();
  $('dateDropdown').classList.add('hidden');
@@ -106,7 +146,7 @@ $('history').addEventListener('click',()=>{
  $('impact').value='all';$('ttr').value='all';
  filter();
 });
-$('reset').addEventListener('click',()=>{selectedCauseCluster=null;selectedExploreCause=null;activeDates=null;draftDates=null;updateDateCaption();$('dateDropdown').classList.add('hidden');['cluster','olt','cause'].forEach(id=>$(id).value='');$('impact').value='all';$('ttr').value='all';filter()});['cluster','olt','cause','impact','ttr','showPins','showCells'].forEach(id=>$(id).addEventListener('change',filter));document.querySelectorAll('#tabs button').forEach(b=>b.addEventListener('click',()=>selectTab(b.dataset.tab)));document.addEventListener('click',e=>{const a=e.target.closest('[data-quad]');if(a){e.preventDefault();focusQuadrant(a.dataset.quad)}});
+$('reset').addEventListener('click',()=>{selectedCauseCluster=null;selectedExploreCause=null;activeDates=null;draftDates=null;clearCalendarGroups();updateDateCaption();$('dateDropdown').classList.add('hidden');['cluster','olt','cause'].forEach(id=>$(id).value='');$('impact').value='all';$('ttr').value='all';filter()});['cluster','olt','cause','impact','ttr','showPins','showCells'].forEach(id=>$(id).addEventListener('change',filter));document.querySelectorAll('#tabs button').forEach(b=>b.addEventListener('click',()=>selectTab(b.dataset.tab)));document.addEventListener('click',e=>{const a=e.target.closest('[data-quad]');if(a){e.preventDefault();focusQuadrant(a.dataset.quad)}});
 // V-68: ranking independiente. Lee filtered; no modifica fórmulas previas ni históricos.
 function top68Cell(r){const [x,y]=gridUtm(r.lat,r.lon);return {ix:Math.floor(x/500),iy:Math.floor(y/500)}}
 function top68Key(c){return c.ix+':'+c.iy}
@@ -148,9 +188,9 @@ function top68Refresh(){if(!top68State?.open)return;const rows=top68State.rows;
  top70Sync();
 }
 function top68CoverageChanged(){if(!top68State)return;top68State.features=null;if(top68State.open)render()}
-function top68Close(){top68State.open=false;top68State.only=false;top68State.selected=null;$('top68Window').hidden=true;$('v59Top10').setAttribute('aria-expanded','false');window.primaveraCoverageTop10Hidden?.(false);render()}
+function top68Close(){top68State.open=false;top68State.only=false;top68State.selected=null;$('top68Window').hidden=true;$('v59Top10').setAttribute('aria-expanded','false');$('v59Top10').setAttribute('aria-pressed','false');window.primaveraCoverageTop10Hidden?.(false);render()}
 try{const saved=JSON.parse(localStorage.getItem('primavera_top10_names_v68')||'{}');if(saved&&typeof saved==='object'&&!Array.isArray(saved))top68State.names=saved}catch(e){}
-$('v59Top10').addEventListener('click',()=>{if(top68State.open){top68Close();return}top68State.open=true;$('top68Window').hidden=false;$('v59Top10').setAttribute('aria-expanded','true');render();$('top68Close').focus()});
+$('v59Top10').addEventListener('click',()=>{if(top68State.open){top68Close();return}top68State.open=true;$('top68Window').hidden=false;$('v59Top10').setAttribute('aria-expanded','true');$('v59Top10').setAttribute('aria-pressed','true');render();requestAnimationFrame(pe84ClampWindow);$('top68Close').focus()});
 $('top68Close').addEventListener('click',top68Close);
 $('top68Only').addEventListener('click',()=>{top68State.only=!top68State.only;window.primaveraCoverageTop10Hidden?.(top68State.only);render()});
 $('top68Table').addEventListener('click',e=>{if(e.target.closest('[data-top70-download]'))return;const b=e.target.closest('[data-top68-key]');if(!b)return;const r=top68State.rows.find(r=>r.key===b.dataset.top68Key);if(!r)return;top68State.selected=r.key;const x=r.ix*500,y=r.iy*500;map.fitBounds(L.latLngBounds([[x,y],[x+500,y],[x+500,y+500],[x,y+500]].map(p=>gridLatLon(...p))),{padding:[25,25],maxZoom:17});render()});
@@ -205,6 +245,66 @@ async function top70Download(){
 $('top70All').addEventListener('change',()=>{const keys=top70Selection();keys.clear();if($('top70All').checked)top68State.rows.forEach(r=>keys.add(r.key));top70Sync()});
 $('top68Table').addEventListener('change',e=>{const input=e.target.closest('input[data-top70-check]');if(!input)return;const keys=top70Selection();if(input.checked)keys.add(input.dataset.top70Check);else keys.delete(input.dataset.top70Check);top70Sync()});
 $('top70Download').addEventListener('click',top70Download);
+
+
+// V-84: presentación de cortes, búsqueda y ventana flotante; solo Planta Externa.
+// V-85: los marcadores de cortes abren/cierran su ficha con el mismo clic.
+function pe85BindPopup(marker,html){
+ marker.bindPopup(html,{className:'pe85-cut-popup',maxWidth:340,minWidth:230,closeButton:true});
+ // En este punto el único listener click del marcador es el añadido por bindPopup.
+ marker.off('click');marker.on('click',()=>{if(marker.isPopupOpen())marker.closePopup();else marker.openPopup()});
+ return marker;
+}
+function pe84Popup(r){
+ const value=v=>v===null||v===undefined||String(v).trim()===''?'Sin información':String(v);
+ const pos=validPos(r),pair=pos?`${r.lat},${r.lon}`:'',encoded=encodeURIComponent(pair);
+ const coord=pos?`<a class="pe85-coordinate-link" href="https://www.google.com/maps/search/?api=1&amp;query=${encoded}" target="_blank" rel="noopener noreferrer" aria-label="Abrir coordenadas en Google Maps">${esc(pair)}</a>`:'Sin información';
+ const fields=[['FOLIO',esc(value(r.folio))],['QR',esc(value(r.qr))],['COORDENADAS',coord],['CLÚSTER',esc(value(r.cluster))],['CAUSA',esc(value(r.cause))],['CLIENTES AFECTADOS',esc(value(r.clients))],['OLT/SEGMENTO',esc(value(r.olt))]];
+ return `<div class="v57-folio"><span class="v57-dot" style="background:${periodColors.get(periodKey(r.date))||'#e02020'}"></span><div><dl class="pe84-cut-fields">${fields.map(([k,v],i)=>`<div class="pe85-field ${i>=2&&i<=4?'pe85-wide':''}"><dt>${k}:</dt><dd>${v}</dd></div>`).join('')}</dl><small>Fecha: ${esc(value(r.date))} · TTR: ${durationText(r.ttr)}</small></div></div>`;
+}
+function pe84Coords(q){const m=q.trim().match(/^([+-]?\d+(?:\.\d+)?)\s*(?:,|;|\s)\s*([+-]?\d+(?:\.\d+)?)$/);if(!m)return null;const r={lat:Number(m[1]),lon:Number(m[2])};return validPos(r)?r:null}
+function pe84ClearMarker(){if(pe84SearchMarker&&map)map.removeLayer(pe84SearchMarker);pe84SearchMarker=null}
+function pe84Focus(r){
+ pe84ClearMarker();selectTab('map');map.setView([r.lat,r.lon],17);let found=null;
+ points.eachLayer(marker=>{if(marker._pe84Rows?.includes(r))found=marker});
+ if(found)found.openPopup();else pe84SearchMarker=pe85BindPopup(L.marker([r.lat,r.lon]).addTo(map),`<div class="v57-popup">${pe84Popup(r)}</div>`).openPopup();
+}
+function pe84Search(){
+ const q=$('pe84Search').value.trim(),output=$('pe84Results');output.replaceChildren();pe84ClearMarker();
+ if(!q){output.textContent='Escribe un folio o coordenadas.';return}
+ const coord=pe84Coords(q);if(coord){selectTab('map');map.setView([coord.lat,coord.lon],17);pe84SearchMarker=L.marker([coord.lat,coord.lon]).addTo(map).bindPopup(`Coordenadas: ${coord.lat}, ${coord.lon}`).openPopup();output.textContent='Coordenadas localizadas.';return}
+ const match=r=>String(r.folio).trim().toLowerCase()===q.toLowerCase(),all=records.filter(match),rows=top68MapRows(filtered).filter(match),located=rows.filter(validPos);
+ if(!rows.length){output.textContent=all.length?'Folio encontrado en el histórico, pero fuera de los filtros o de la vista exclusiva Top 10.':'Folio no encontrado en la base.';return}
+ if(!located.length){output.textContent='Folio encontrado, sin coordenadas válidas.';return}
+ pe84Focus(located[0]);output.textContent=located.length===1?'Folio localizado.':`${located.length} coincidencias. Elige una ubicación: `;
+ if(located.length>1){const list=document.createElement('select');list.setAttribute('aria-label','Resultados por folio');located.forEach((r,i)=>{const option=document.createElement('option');option.value=String(i);option.textContent=`${r.folio} · ${r.cluster} · ${r.date} · ${r.lat}, ${r.lon}`;list.appendChild(option)});list.addEventListener('change',()=>pe84Focus(located[Number(list.value)]));output.appendChild(list)}
+}
+$('pe84SearchGo').addEventListener('click',pe84Search);
+$('pe84Search').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();pe84Search()}});
+$('pe84SearchClear').addEventListener('click',()=>{pe84ClearMarker();map.closePopup();$('pe84Search').value='';$('pe84Results').replaceChildren()});
+const pe84Window=$('top68Window');
+const pe84Body=document.createElement('div');pe84Body.className='pe84-window-body';while(pe84Window.firstChild)pe84Body.appendChild(pe84Window.firstChild);pe84Window.appendChild(pe84Body);
+function pe84ClampWindow(){
+ if(pe84Window.hidden)return;const r=pe84Window.getBoundingClientRect(),margin=8;
+ const w=Math.min(r.width,Math.max(1,innerWidth-margin*2)),h=Math.min(r.height,Math.max(1,innerHeight-margin*2));
+ Object.assign(pe84Window.style,{right:'auto',bottom:'auto',width:w+'px',height:h+'px',left:Math.max(margin,Math.min(r.left,innerWidth-w-margin))+'px',top:Math.max(margin,Math.min(r.top,innerHeight-h-margin))+'px'});
+}
+function pe84WindowBox(r,dx,dy,edge,vw,vh){
+ const minW=Math.min(290,vw-16),minH=Math.min(240,vh-16);let left=r.left,top=r.top,width=r.width,height=r.height;
+ if(!edge){left=Math.max(8,Math.min(r.left+dx,vw-width-8));top=Math.max(8,Math.min(r.top+dy,vh-height-8))}
+ else{if(edge.includes('e'))width=Math.max(minW,Math.min(r.width+dx,vw-left-8));if(edge.includes('s'))height=Math.max(minH,Math.min(r.height+dy,vh-top-8));if(edge.includes('w')){left=Math.max(8,Math.min(r.left+dx,r.left+r.width-minW));width=r.width+r.left-left}if(edge.includes('n')){top=Math.max(8,Math.min(r.top+dy,r.top+r.height-minH));height=r.height+r.top-top}}
+ return {left,top,width,height};
+}
+let pe84Gesture=null;
+for(const edge of ['n','s','e','w','ne','nw','se','sw']){const grip=document.createElement('span');grip.className='pe84-grip pe84-'+edge;grip.dataset.pe84Edge=edge;grip.setAttribute('aria-hidden','true');pe84Window.appendChild(grip)}
+pe84Window.addEventListener('pointerdown',e=>{
+ if(e.button!==0||e.isPrimary===false)return;const edge=e.target.closest('[data-pe84-edge]')?.dataset.pe84Edge;
+ if(!edge&&e.target.closest('button,a,input,select,textarea,label,table,[role=button]'))return;
+ pe84ClampWindow();pe84Gesture={id:e.pointerId,x:e.clientX,y:e.clientY,rect:pe84Window.getBoundingClientRect(),edge};pe84Window.setPointerCapture(e.pointerId);pe84Window.classList.add('pe84-moving');e.preventDefault();
+});
+pe84Window.addEventListener('pointermove',e=>{if(!pe84Gesture||e.pointerId!==pe84Gesture.id)return;const g=pe84Gesture,b=pe84WindowBox(g.rect,e.clientX-g.x,e.clientY-g.y,g.edge,innerWidth,innerHeight);for(const key of ['left','top','width','height'])pe84Window.style[key]=b[key]+'px'});
+function pe84EndGesture(e){if(!pe84Gesture||e.pointerId!==pe84Gesture.id)return;pe84Gesture=null;pe84Window.classList.remove('pe84-moving');if(pe84Window.hasPointerCapture(e.pointerId))pe84Window.releasePointerCapture(e.pointerId)}
+pe84Window.addEventListener('pointerup',pe84EndGesture);pe84Window.addEventListener('pointercancel',pe84EndGesture);pe84Window.addEventListener('lostpointercapture',()=>{pe84Gesture=null;pe84Window.classList.remove('pe84-moving')});window.addEventListener('resize',pe84ClampWindow);
 
 })();
 

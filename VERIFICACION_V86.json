@@ -1,0 +1,34 @@
+{
+  "version": "V-86",
+  "scope": "Calendario y colores temporales de Planta Externa",
+  "status": "pendiente prueba real y aprobación",
+  "protected_identical": [
+    "app.js",
+    "bienvenida.js",
+    "repeat60.js",
+    "repeat60.css",
+    "repeat-tools-v78.js",
+    "repeat-tools-v78.css",
+    "support-calendar-v73.js",
+    "support-start-v76.js",
+    "support-layout-v74.js",
+    "support-layout-v74.css",
+    "support-buttons-v77.css",
+    "support-v72.css",
+    "cleanup.js",
+    "coverage-v53.js",
+    "pon-v47.js",
+    "pon-v47.css",
+    "styles.css"
+  ],
+  "test_result": "PASS: sintaxis, DOM/Leaflet simulados, regresión, sectores SVG y compatibilidad KML de colores",
+  "limitations": [
+    "Sin validación visual de navegador",
+    "Sin base real de gerentes"
+  ],
+  "sha256": {
+    "masivos.js": "65722c29d8065284bb962d31ea34da9d0ca0491dc1ce1ff65b586f2a78907ba0",
+    "masivos.css": "c22f25c6778996f8c455ff53c17fa61366e92918ecfdd440e2920a937141a8ed",
+    "masivos.html": "1c05165d31522ed6f1ef0e377350c086c8eb5351fcf96809f239443b297b7683"
+  }
+}

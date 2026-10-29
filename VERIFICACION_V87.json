@@ -1,0 +1,31 @@
+{
+  "version": "V-87",
+  "status": "pendiente prueba y aprobación",
+  "scope": "Vínculo de coordenadas de Planta Externa",
+  "protected_identical": [
+    "app.js",
+    "pon-v47.css",
+    "repeat-tools-v78.js",
+    "bienvenida.js",
+    "support-start-v76.js",
+    "pon-v47.js",
+    "coverage-v53.js",
+    "repeat60.js",
+    "styles.css",
+    "support-buttons-v77.css",
+    "support-layout-v74.css",
+    "masivos.css",
+    "repeat60.css",
+    "support-calendar-v73.js",
+    "support-layout-v74.js",
+    "support-v72.css",
+    "repeat-tools-v78.css",
+    "cleanup.js"
+  ],
+  "checks": [
+    "Sintaxis JS correcta",
+    "Diferencia exacta limitada a URL y etiqueta accesible",
+    "Referencias de publicación verificadas"
+  ],
+  "sha256": "34ef1ca940b7dd1f04e2a1e2ff5fd1b6f601e30309f52799c34b1767f0abcd93"
+}
