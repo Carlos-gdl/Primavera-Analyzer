@@ -1,0 +1,7 @@
+#repeatModule .rp78-missing-wrap[hidden]{display:none!important}
+#repeatModule .kpis{grid-template-columns:repeat(6,minmax(0,1fr))}
+#repeatModule .actions label.mainbtn{display:inline-flex;align-items:center;gap:7px}
+#repeatModule .rp21-db{width:18px;height:18px;flex:none}
+#repeatModule .rp21-top-actions{display:flex;justify-content:space-between;align-items:center;gap:8px}
+#repeatModule #rp21-viewTop[aria-pressed="true"]{box-shadow:inset 0 2px 5px #0003;background:#f9dfcb;border-color:#e99a61}
+@media(max-width:800px){#repeatModule .kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}

@@ -1,0 +1,13 @@
+/* V-47: estilos exclusivos de la pestaña PON */
+.pon47-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.pon47-toolbar .panel-title{margin:0;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.pon47-toolbar label{font-size:12px;white-space:nowrap;color:#d7e9f5}
+.pon47-toolbar select{padding:7px 10px;border-radius:6px;background:#173a52;color:#fff;border:1px solid #45657b}
+.pon47 .table-scroll{overflow:auto;max-height:570px}
+.pon47 table{width:100%;border-collapse:collapse}
+.pon47-click{cursor:pointer}
+.pon47-click:hover{background:rgba(63,151,205,.16)}
+.pon47-detail-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.pon47-detail-head h2{margin:0;font-size:15px}
+.pon47 tfoot th{border-top:2px solid #4b7189;padding:10px 8px;text-align:left}
+.pon47 [hidden]{display:none!important}

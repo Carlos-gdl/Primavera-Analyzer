@@ -1,0 +1,24 @@
+/* V-2.9: reubicación exclusiva de Planta Externa. */
+#plantModule .v59-top{grid-template-columns:minmax(290px,.48fr) minmax(530px,1fr) minmax(550px,1.25fr)}
+#plantModule .pe93-tools>.btn{grid-row:1}
+#plantModule .pe93-tools #dateToggle{grid-column:1}
+#plantModule .pe93-tools #coverageToggle{grid-column:2}
+#plantModule .pe93-tools .pe84-search{grid-row:2;grid-column:1/-1}
+#plantModule .pe28-filters{align-content:center!important;justify-content:center}
+#plantModule .pe84-search-row{width:100%}
+#plantModule .pe29-search-field{position:relative;flex:1;min-width:0;display:flex}
+#plantModule .pe29-search-field #pe84Search{box-sizing:border-box;width:100%;padding-right:27px;min-width:0}
+#plantModule #pe84Search::-webkit-search-cancel-button{-webkit-appearance:none;appearance:none}
+#plantModule .pe29-search-field #pe84SearchClear{position:absolute;right:3px;top:50%;transform:translateY(-50%);width:23px;height:25px;padding:0;border:0;background:transparent;color:#607b99;opacity:0;pointer-events:none;box-shadow:none;font-size:17px}
+#plantModule .pe29-search-field.has-text:hover #pe84SearchClear,#plantModule .pe29-search-field.has-text:focus-within #pe84SearchClear{opacity:1;pointer-events:auto}
+#plantModule #pe84SearchGo{flex:none}
+@media(hover:none){#plantModule .pe29-search-field.has-text #pe84SearchClear{opacity:1;pointer-events:auto}}
+@media(max-width:1450px){#plantModule .v59-top{grid-template-columns:minmax(260px,.65fr) minmax(400px,1fr) minmax(420px,1.2fr)}}
+@media(max-width:1100px){#plantModule .v59-top{grid-template-columns:1fr 1fr}#plantModule .v59-top aside{grid-column:1/-1}}
+@media(max-width:600px){#plantModule .v59-top{grid-template-columns:1fr}#plantModule .v59-top aside{grid-column:1}}
+@media(min-width:900px){
+ #plantModule #panel-map{grid-template-columns:minmax(0,1fr) minmax(260px,22%)}
+ #plantModule #panel-map .mapcharts{grid-column:1;grid-row:1}
+ #plantModule #panel-map .analysis-bottom{grid-column:2;grid-row:1}
+}
+@media(min-width:900px) and (max-width:1250px){#plantModule #panel-map{grid-template-columns:minmax(0,1fr) minmax(240px,25%)}}

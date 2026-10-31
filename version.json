@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "version": "V-2.10",
+  "release": "V-2.10-7d2af5cb6788",
+  "pages": {
+    "index": "index.pa2.10.7d2af5cb6788.html",
+    "masivos": "masivos.pa2.10.7d2af5cb6788.html",
+    "repeat60": "repeat60.pa2.10.7d2af5cb6788.html"
+  }
+}
