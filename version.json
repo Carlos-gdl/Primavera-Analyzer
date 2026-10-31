@@ -1,10 +1,10 @@
 {
   "schema": 1,
-  "version": "V-94",
-  "release": "V-94-fbc4b8134d44",
+  "version": "V-2.10",
+  "release": "V-2.10-ce1c974eccf1",
   "pages": {
-    "index": "index.pa94.fbc4b8134d44.html",
-    "masivos": "masivos.pa94.fbc4b8134d44.html",
-    "repeat60": "repeat60.pa94.fbc4b8134d44.html"
+    "index": "index.pa2.10.ce1c974eccf1.html",
+    "masivos": "masivos.pa2.10.ce1c974eccf1.html",
+    "repeat60": "repeat60.pa2.10.ce1c974eccf1.html"
   }
 }

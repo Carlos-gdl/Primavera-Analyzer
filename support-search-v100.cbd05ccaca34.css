@@ -1,0 +1,11 @@
+/* Ajustes visuales exclusivos de Soportes V-100. */
+#supportModule .sc100-search-field{position:relative;display:flex;align-items:center;flex:1;min-width:80px}
+#supportModule .supports-v71-search .search-actions .sc100-search-field input{width:100%;min-width:0;box-sizing:border-box;padding-right:26px}
+#supportModule #mapSearch::-webkit-search-cancel-button{-webkit-appearance:none;appearance:none}
+#supportModule #searchClear[hidden],#supportModule #sc100-searchX[hidden]{display:none!important}
+#supportModule #sc100-searchX{position:absolute;right:2px;top:50%;transform:translateY(-50%);width:24px;height:24px;padding:0;border:0;background:transparent;color:inherit;font:20px/24px Arial,sans-serif;cursor:pointer;opacity:0;pointer-events:none;border-radius:3px}
+#supportModule .sc100-search-field:hover #sc100-searchX,#supportModule .sc100-search-field:focus-within #sc100-searchX{opacity:.65;pointer-events:auto}
+#supportModule #sc100-searchX:hover,#supportModule #sc100-searchX:focus-visible{opacity:1}
+@media(hover:none){#supportModule #sc100-searchX{opacity:.65;pointer-events:auto}}
+#supportModule #cleanupUploadLabel{display:inline-flex;align-items:center;gap:7px}
+#supportModule #cleanupUploadLabel::before{content:'';display:inline-block;width:18px;height:18px;flex:none;background:center/contain no-repeat url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2318345d%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cellipse%20cx%3D%2212%22%20cy%3D%225%22%20rx%3D%228%22%20ry%3D%223%22%2F%3E%3Cpath%20d%3D%22M4%205v14c0%204%2016%204%2016%200V5M4%2012c0%204%2016%204%2016%200%22%2F%3E%3C%2Fsvg%3E")}

@@ -1,0 +1,10 @@
+/* V-99: presentación exclusiva de Soportes y estado del interruptor TOP. */
+#supportModule #sc99-kpis{grid-template-columns:repeat(4,minmax(0,1fr))}
+#supportModule #sc99-kpis article[hidden],#supportModule #bulkVisibilityPanel[hidden],#supportModule #sc98-punteo [hidden]{display:none!important}
+#supportModule .sc99-top-actions{display:flex;align-items:center;padding:0 0 10px;gap:8px}
+#supportModule #sc99-viewTop{min-height:34px;padding:8px 14px;cursor:pointer}
+#supportModule #sc99-viewTop.is-active{background:var(--bg);border-color:#ec8c48;box-shadow:inset 0 2px 5px #71390e30}
+#supportModule #sc98-punteo>.sc74-menu-content{width:260px;padding:12px;max-width:calc(100vw - 40px)}
+#supportModule #sc98-punteo .sc98-point-options{display:flex;align-items:center;justify-content:space-between;gap:14px;white-space:nowrap}
+#supportModule #sc98-punteo .sc98-point-options label{margin:0;padding:3px 0;font-size:12px;gap:7px}
+@media(max-width:650px){#supportModule #sc99-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
