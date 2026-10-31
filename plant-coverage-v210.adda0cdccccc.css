@@ -1,6 +1,0 @@
-#plantModule #coverageMenu{left:clamp(12px,20vw,340px);right:auto;top:18px;max-width:min(640px,calc(100vw - 24px))}
-#plantModule #pe210-coverageHandle{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:0 0 9px;margin:0 0 10px;border-bottom:1px solid #efdacc;font-weight:700;cursor:grab;touch-action:none;user-select:none;color:#17365f}
-#plantModule #coverageMenu.pe210-dragging #pe210-coverageHandle{cursor:grabbing}
-#plantModule .pe210-coverageFooter{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:10px}
-#plantModule .pe210-coverageFooter label{display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer}
-#plantModule #pe210-coverageAll{accent-color:#ff690b}

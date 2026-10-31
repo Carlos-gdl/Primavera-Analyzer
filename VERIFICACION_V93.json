@@ -1,8 +1,0 @@
-{
-  "checks": {
-    "original_logic_and_styles_unchanged": true,
-    "other_modules_unchanged_except_release": true,
-    "all_controls_preserved": true
-  },
-  "limitation": "Pendiente validaci\u00f3n visual en navegador y con bases reales."
-}

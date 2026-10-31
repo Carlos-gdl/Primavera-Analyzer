@@ -1,6 +1,0 @@
-/* Presentación de eventos exclusiva de Soportes. */
-#supportModule .sc20-popup .point-popup-table{max-height:290px;overflow:auto}
-#supportModule .sc20-popup table{width:100%;border-collapse:collapse;table-layout:auto}
-#supportModule .sc20-popup th{width:43%;text-align:left;font-weight:600;vertical-align:top}
-#supportModule .sc20-popup th,#supportModule .sc20-popup td{padding:6px 8px;overflow-wrap:anywhere}
-#supportModule .sc20-popup summary{padding:7px 2px;cursor:pointer}
